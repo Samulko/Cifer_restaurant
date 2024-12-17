@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-rgb: 0, 0, 0;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-rgb));
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+}
+
+.smooth-scroll-section {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+}
+
+.image-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.overlay-text {
+  position: absolute;
+  z-index: 10;
+  mix-blend-mode: difference;
+  color: white;
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+}
+
+.nav-menu {
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  z-index: 50;
+  mix-blend-mode: difference;
+}
+
+.full-screen-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgb(var(--background-rgb));
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.full-screen-menu.active {
+  opacity: 1;
+  pointer-events: all;
+}

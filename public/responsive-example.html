@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Images Example</title>
+    <style>
+        .responsive-img {
+            max-width: 100%;
+            height: auto;
+        }
+        .img-container {
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="img-container">
+        <picture>
+            <!-- Large screens (1200px and up) - high quality -->
+            <source
+                media="(min-width: 1200px)"
+                srcset="images/responsive/high/DSC_2299-HDR.webp"
+                type="image/webp">
+            
+            <!-- Medium screens (768px to 1199px) - medium quality -->
+            <source
+                media="(min-width: 768px)"
+                srcset="images/responsive/medium/DSC_2299-HDR.webp"
+                type="image/webp">
+            
+            <!-- Small screens (below 768px) - small quality -->
+            <source
+                srcset="images/responsive/small/DSC_2299-HDR.webp"
+                type="image/webp">
+            
+            <!-- Fallback for browsers that don't support WebP -->
+            <img 
+                src="images/DSC_2299-HDR.jpg"
+                alt="Restaurant Image"
+                class="responsive-img">
+        </picture>
+    </div>
+</body>
+</html>
