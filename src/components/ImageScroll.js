@@ -75,8 +75,8 @@ const ImageScroll = () => {
   return (
     <div className="fixed inset-0 bg-black">
       {/* Welcome Title */}
-      <div className="fixed top-0 left-0 w-full z-50 bg-gradient-to-b from-black/70 to-transparent p-6">
-        <h1 className="text-4xl md:text-6xl font-bold text-white text-center">
+      <div className="fixed top-0 left-0 w-full z-50 p-6">
+        <h1 className="text-4xl md:text-6xl font-bold text-center overlay-text">
           Welcome v Haji!
         </h1>
       </div>
