@@ -95,25 +95,32 @@ const ImageScroll = () => {
     requestAnimationFrame(raf);
 
     lenis.on('scroll', () => {
-      const newSlide = Math.floor(lenis.scroll / window.innerHeight);
+      const scrollY = lenis.scroll;
+      const windowHeight = window.innerHeight;
+      const newSlide = Math.floor(scrollY / windowHeight);
+      const scrollProgress = (scrollY % windowHeight) / windowHeight;
+
+
       if (newSlide !== currentSlide && newSlide >= 0 && newSlide < images.length && !isTransitioning) {
-        setIsTransitioning(true);
-        const prevSlide = currentSlide;
-        setCurrentSlide(newSlide);
+        if (scrollProgress > 0.1) {
+          setIsTransitioning(true);
+          const prevSlide = currentSlide;
+          setCurrentSlide(newSlide);
 
-        if (scrollContainerRef.current) {
-          const prevSlideElement = scrollContainerRef.current.children[prevSlide];
-          const newSlideElement = scrollContainerRef.current.children[newSlide];
+          if (scrollContainerRef.current) {
+            const prevSlideElement = scrollContainerRef.current.children[prevSlide];
+            const newSlideElement = scrollContainerRef.current.children[newSlide];
 
-          if (newSlideElement && prevSlideElement) {
-            gsap.timeline()
-              .to(prevSlideElement, { opacity: 0, duration: 0.5, ease: 'power2.inOut' })
-              .to(newSlideElement, { opacity: 1, duration: 0.5, ease: 'power2.inOut', onComplete: () => setIsTransitioning(false) }, "<");
+            if (newSlideElement && prevSlideElement) {
+              gsap.timeline()
+                .to(prevSlideElement, { opacity: 0, duration: 0.5, ease: 'power2.inOut' })
+                .to(newSlideElement, { opacity: 1, duration: 0.5, ease: 'power2.inOut', onComplete: () => setIsTransitioning(false) }, "<");
+            } else {
+              setIsTransitioning(false);
+            }
           } else {
             setIsTransitioning(false);
           }
-        } else {
-          setIsTransitioning(false);
         }
       }
     });
