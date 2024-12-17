@@ -95,7 +95,22 @@ const ImageScroll = () => {
     lenis.on('scroll', () => {
       const newSlide = Math.floor(lenis.scroll / window.innerHeight);
       if (newSlide !== currentSlide && newSlide >= 0 && newSlide < images.length) {
+        const prevSlide = currentSlide;
         setCurrentSlide(newSlide);
+
+        if (scrollContainerRef.current) {
+          const prevSlideElement = scrollContainerRef.current.children[prevSlide];
+          const newSlideElement = scrollContainerRef.current.children[newSlide];
+
+          if (newSlideElement) {
+            newSlideElement.classList.remove('opacity-0');
+            newSlideElement.classList.add('opacity-100');
+          }
+          if (prevSlideElement) {
+            prevSlideElement.classList.remove('opacity-100');
+            prevSlideElement.classList.add('opacity-0');
+          }
+        }
       }
     });
 
