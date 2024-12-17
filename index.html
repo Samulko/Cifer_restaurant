@@ -86,6 +86,18 @@
         .dot.active {
             background: white;
         }
+        .overlay-text {
+            position: absolute;
+            z-index: 10;
+            mix-blend-mode: difference;
+            color: white;
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 300;
+            letter-spacing: -0.02em;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
     </style>
 </head>
 <body>
@@ -116,6 +128,7 @@
         
         <div class="dots-container"></div>
     </div>
+    <h1 id="welcome-text" class="overlay-text">Welcome to Haji</h1>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -124,6 +137,7 @@
             const prevBtn = document.querySelector('.prev-btn');
             const nextBtn = document.querySelector('.next-btn');
             const dotsContainer = document.querySelector('.dots-container');
+            const welcomeText = document.getElementById('welcome-text');
 
             let currentSlide = 0;
             const totalSlides = slides.length;
@@ -147,6 +161,7 @@
                 currentSlide = n;
                 slider.style.transform = `translateX(-${currentSlide * 100}%)`;
                 updateDots();
+                updateTextColor();
             }
 
             function nextSlide() {
@@ -171,6 +186,25 @@
 
             // Auto-advance slides every 5 seconds
             setInterval(nextSlide, 5000);
+
+            function updateTextColor() {
+                if (!welcomeText) return;
+                const currentSlideElement = slides[currentSlide];
+                if (!currentSlideElement) return;
+
+                const backgroundColor = window.getComputedStyle(currentSlideElement).backgroundColor;
+                const rgbValues = backgroundColor.match(/\d+/g);
+
+                if (rgbValues && rgbValues.length === 3) {
+                    const invertedR = 255 - parseInt(rgbValues[0], 10);
+                    const invertedG = 255 - parseInt(rgbValues[1], 10);
+                    const invertedB = 255 - parseInt(rgbValues[2], 10);
+
+                    welcomeText.style.color = `rgb(${invertedR}, ${invertedG}, ${invertedB})`;
+                }
+            }
+            updateTextColor();
+            window.addEventListener('resize', updateTextColor);
         });
     </script>
     <script>
