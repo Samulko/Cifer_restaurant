@@ -102,13 +102,13 @@ const ImageScroll = () => {
           const prevSlideElement = scrollContainerRef.current.children[prevSlide];
           const newSlideElement = scrollContainerRef.current.children[newSlide];
 
-          if (prevSlideElement) {
-            prevSlideElement.classList.remove('opacity-100');
-            prevSlideElement.classList.add('opacity-0');
-          }
           if (newSlideElement) {
             newSlideElement.classList.remove('opacity-0');
             newSlideElement.classList.add('opacity-100');
+          }
+          if (prevSlideElement) {
+            prevSlideElement.classList.remove('opacity-100');
+            prevSlideElement.classList.add('opacity-0');
           }
         }
       }
