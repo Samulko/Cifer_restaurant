@@ -188,19 +188,35 @@
             setInterval(nextSlide, 5000);
 
             function updateTextColor() {
-                if (!welcomeText) return;
+                if (!welcomeText) {
+                    console.log("welcomeText is null");
+                    return;
+                }
                 const currentSlideElement = slides[currentSlide];
-                if (!currentSlideElement) return;
+                if (!currentSlideElement) {
+                    console.log("currentSlideElement is null");
+                    return;
+                }
 
-                const backgroundColor = window.getComputedStyle(currentSlideElement).backgroundColor;
+                const imageContainer = currentSlideElement.querySelector('img');
+                if (!imageContainer) {
+                    console.log("imageContainer is null");
+                    return;
+                }
+
+                const backgroundColor = window.getComputedStyle(imageContainer).backgroundColor;
+                console.log("backgroundColor:", backgroundColor);
                 const rgbValues = backgroundColor.match(/\d+/g);
+                console.log("rgbValues:", rgbValues);
 
                 if (rgbValues && rgbValues.length === 3) {
                     const invertedR = 255 - parseInt(rgbValues[0], 10);
                     const invertedG = 255 - parseInt(rgbValues[1], 10);
                     const invertedB = 255 - parseInt(rgbValues[2], 10);
 
-                    welcomeText.style.color = `rgb(${invertedR}, ${invertedG}, ${invertedB})`;
+                    const invertedColor = `rgb(${invertedR}, ${invertedG}, ${invertedB})`;
+                    console.log("invertedColor:", invertedColor);
+                    welcomeText.style.color = invertedColor;
                 }
             }
             updateTextColor();
