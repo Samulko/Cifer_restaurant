@@ -50,7 +50,7 @@ const ImageScroll = () => {
       const pixelData = context.getImageData(centerX, centerY, 1, 1).data;
       
       const brightness = (pixelData[0] * 299 + pixelData[1] * 587 + pixelData[2] * 114) / 1000;
-      const textColor = brightness < 128 ? '#ffffff' : '#000000';
+      const textColor = brightness < 128 ? '#000000' : '#ffffff';
       
       const currentText = texts[currentSlide];
       if (currentText && currentText.ref.current) {
