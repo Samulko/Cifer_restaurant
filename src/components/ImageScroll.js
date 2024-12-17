@@ -1,16 +1,12 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Lenis from '@studio-freight/lenis';
-import gsap from 'gsap';
 
 const ImageScroll = () => {
   const scrollContainerRef = useRef(null);
-  const welcomeTextRef = useRef(null);
-  const diningTextRef = useRef(null);
-  const [currentSlide, setCurrentSlide] = useState(0);
-
+  
   const images = [
     '/images/DSC_3061-HDR.webp',
     '/images/DSC_2299-HDR.webp',
@@ -21,52 +17,6 @@ const ImageScroll = () => {
     '/images/DSC_2905-HDR.webp',
     '/images/DSC_3016-HDR.webp'
   ];
-
-  const texts = [
-    { ref: welcomeTextRef, content: "Welcome to Haji" },
-    { ref: diningTextRef, content: "Fine Dining Experience" }
-  ];
-
-  const updateTextColor = () => {
-    if (!scrollContainerRef.current) return;
-
-    const currentSlideElement = scrollContainerRef.current.children[currentSlide];
-    if (!currentSlideElement) return;
-
-    const imgContainer = currentSlideElement;
-    if (!imgContainer) return;
-
-    const computedStyle = getComputedStyle(imgContainer);
-    const backgroundColor = computedStyle.backgroundColor;
-
-    const rgbMatch = backgroundColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
-
-    if (rgbMatch) {
-      const r = parseInt(rgbMatch[1], 10);
-      const g = parseInt(rgbMatch[2], 10);
-      const b = parseInt(rgbMatch[3], 10);
-
-      const invertedR = 255 - r;
-      const invertedG = 255 - g;
-      const invertedB = 255 - b;
-
-      const textColor = `rgb(${invertedR}, ${invertedG}, ${invertedB})`;
-
-      texts.forEach(textItem => {
-        if (textItem.ref.current) {
-          textItem.ref.current.style.color = textColor;
-        }
-      });
-      console.log(`Slide ${currentSlide}: Background RGB(${r},${g},${b}), Inverted RGB: ${invertedR},${invertedG},${invertedB}`);
-    } else {
-        console.log(`Slide ${currentSlide}: Could not parse background color: ${backgroundColor}`);
-    }
-  };
-
-
-  useEffect(() => {
-    updateTextColor();
-  }, [currentSlide]);
 
   useEffect(() => {
     if (!scrollContainerRef.current) return;
@@ -94,57 +44,82 @@ const ImageScroll = () => {
 
     requestAnimationFrame(raf);
 
-    lenis.on('scroll', () => {
-      const scrollY = lenis.scroll;
-      const windowHeight = window.innerHeight;
-      const newSlide = Math.floor(scrollY / windowHeight);
-
-      if (newSlide !== currentSlide && newSlide >= 0 && newSlide < images.length) {
-          setCurrentSlide(newSlide);
+    // Intersection Observer for animations
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-fade-in');
+            entry.target.classList.remove('opacity-0');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.2,
+        root: scrollContainerRef.current
       }
+    );
+
+    const imageContainers = document.querySelectorAll('.image-container');
+    imageContainers.forEach((img) => {
+      observer.observe(img);
     });
 
     return () => {
       lenis.destroy();
+      observer.disconnect();
     };
-  }, [currentSlide]);
+  }, []);
 
   return (
     <div className="fixed inset-0 bg-black">
-      {texts.map((text, index) => (
-        <h1
-          key={index}
-          ref={text.ref}
-          className={`fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 text-4xl font-light tracking-tight transition-all duration-700 ${
-            index === currentSlide ? 'opacity-100' : 'opacity-0'
-          }`}
-        >
-          {text.content}
+      {/* Fixed centered text */}
+      <div 
+        className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center z-50"
+        style={{ 
+          mixBlendMode: 'difference',
+          color: 'white'
+        }}
+      >
+        <h1 className="text-4xl md:text-6xl font-bold mb-4">
+          Welcome to Haji
         </h1>
-      ))}
+        <p className="text-xl md:text-2xl">
+          Fine Dining Experience
+        </p>
+      </div>
 
+      {/* Images Container */}
       <div 
         ref={scrollContainerRef}
         className="h-screen overflow-y-auto"
       >
         {images.map((src, index) => (
           <div 
-            key={index}
-            className={`h-screen w-full relative`}
-            style={{ backgroundColor: 'rgb(0,0,0)' }}
+            key={src} 
+            className="relative h-screen w-full"
           >
-            <Image
-              src={src}
-              alt={`Slide ${index + 1}`}
-              fill
-              style={{ objectFit: 'cover' }}
-              priority={index === 0}
-              onLoad={() => {
-                if (index === currentSlide) {
-                  updateTextColor();
-                }
-              }}
-            />
+            {/* Divider */}
+            {index > 0 && (
+              <div className="absolute top-0 left-0 w-full h-16 z-10 bg-gradient-to-b from-black to-transparent" />
+            )}
+            
+            {/* Image Container */}
+            <div className="image-container relative w-full h-full flex items-center justify-center overflow-hidden opacity-0 transition-all duration-1000">
+              <div className="relative w-[120%] h-full transition-all duration-700 hover:brightness-110">
+                <Image
+                  src={src}
+                  alt={`Restaurant ambiance ${index + 1}`}
+                  fill
+                  className="object-cover"
+                  sizes="120vw"
+                  priority={index === 0}
+                  loading={index === 0 ? "eager" : "lazy"}
+                  quality={90}
+                />
+              </div>
+            </div>
           </div>
         ))}
       </div>
