@@ -44,6 +44,11 @@
         .slide {
             min-width: 100%;
             height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .slide.active {
+            opacity: 1;
         }
 
         .slide img {
@@ -226,6 +231,13 @@
                 slider.style.transform = `translateX(-${currentSlide * 100}%)`;
                 updateDots();
                 updateTextColor();
+                slides.forEach((slide, index) => {
+                    if (index === currentSlide) {
+                        slide.classList.add('active');
+                    } else {
+                        slide.classList.remove('active');
+                    }
+                });
             }
 
             function nextSlide() {
