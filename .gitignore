@@ -32,7 +32,7 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
-next-env.d.ts
+next-env.d.tsf
 
 # images
 public/images/*.jpg
@@ -51,3 +51,4 @@ Thumbs.db
 .DS_Store
 .directory
 Desktop.ini
+.aider*
