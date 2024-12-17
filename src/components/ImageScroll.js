@@ -3,12 +3,14 @@
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Lenis from '@studio-freight/lenis';
+import gsap from 'gsap';
 
 const ImageScroll = () => {
   const scrollContainerRef = useRef(null);
   const welcomeTextRef = useRef(null);
   const diningTextRef = useRef(null);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   const images = [
     '/images/DSC_3061-HDR.webp',
@@ -94,7 +96,8 @@ const ImageScroll = () => {
 
     lenis.on('scroll', () => {
       const newSlide = Math.floor(lenis.scroll / window.innerHeight);
-      if (newSlide !== currentSlide && newSlide >= 0 && newSlide < images.length) {
+      if (newSlide !== currentSlide && newSlide >= 0 && newSlide < images.length && !isTransitioning) {
+        setIsTransitioning(true);
         const prevSlide = currentSlide;
         setCurrentSlide(newSlide);
 
@@ -102,14 +105,15 @@ const ImageScroll = () => {
           const prevSlideElement = scrollContainerRef.current.children[prevSlide];
           const newSlideElement = scrollContainerRef.current.children[newSlide];
 
-          if (newSlideElement) {
-            newSlideElement.classList.remove('opacity-0');
-            newSlideElement.classList.add('opacity-100');
+          if (newSlideElement && prevSlideElement) {
+            gsap.timeline()
+              .to(prevSlideElement, { opacity: 0, duration: 0.5, ease: 'power2.inOut' })
+              .to(newSlideElement, { opacity: 1, duration: 0.5, ease: 'power2.inOut', onComplete: () => setIsTransitioning(false) }, "<");
+          } else {
+            setIsTransitioning(false);
           }
-          if (prevSlideElement) {
-            prevSlideElement.classList.remove('opacity-100');
-            prevSlideElement.classList.add('opacity-0');
-          }
+        } else {
+          setIsTransitioning(false);
         }
       }
     });
@@ -117,7 +121,7 @@ const ImageScroll = () => {
     return () => {
       lenis.destroy();
     };
-  }, [currentSlide]);
+  }, [currentSlide, isTransitioning]);
 
   return (
     <div className="fixed inset-0 bg-black">
@@ -140,9 +144,7 @@ const ImageScroll = () => {
         {images.map((src, index) => (
           <div 
             key={index}
-            className={`h-screen w-full relative transition-opacity duration-1000 ${
-              index === currentSlide ? 'opacity-100' : 'opacity-0'
-            }`}
+            className={`h-screen w-full relative transition-opacity duration-1000 opacity-0`}
           >
             <Image
               src={src}
