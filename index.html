@@ -14,6 +14,18 @@
         body {
             font-family: 'Arial', sans-serif;
             line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        #welcome-text {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            font-size: 3rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            transition: color 0.3s ease;
         }
 
         .slider-container {
@@ -86,18 +98,6 @@
         .dot.active {
             background: white;
         }
-        .overlay-text {
-            position: absolute;
-            z-index: 10;
-            mix-blend-mode: difference;
-            color: white;
-            font-size: clamp(2rem, 5vw, 4rem);
-            font-weight: 300;
-            letter-spacing: -0.02em;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
     </style>
 </head>
 <body>
@@ -128,7 +128,7 @@
         
         <div class="dots-container"></div>
     </div>
-    <h1 id="welcome-text" class="overlay-text">Welcome to Haji</h1>
+    <h1 id="welcome-text">Welcome to Haji</h1>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -138,23 +138,87 @@
             const nextBtn = document.querySelector('.next-btn');
             const dotsContainer = document.querySelector('.dots-container');
             const welcomeText = document.getElementById('welcome-text');
-
+            
             let currentSlide = 0;
             const totalSlides = slides.length;
+            let imagesLoaded = 0;
 
-            // Create dots
-            for (let i = 0; i < totalSlides; i++) {
-                const dot = document.createElement('div');
-                dot.classList.add('dot');
-                if (i === 0) dot.classList.add('active');
-                dot.addEventListener('click', () => goToSlide(i));
-                dotsContainer.appendChild(dot);
+            // Wait for all images to load
+            slides.forEach(slide => {
+                const img = slide.querySelector('img');
+                if (img.complete) {
+                    imagesLoaded++;
+                    if (imagesLoaded === totalSlides) {
+                        initializeSlider();
+                    }
+                } else {
+                    img.addEventListener('load', () => {
+                        imagesLoaded++;
+                        if (imagesLoaded === totalSlides) {
+                            initializeSlider();
+                        }
+                    });
+                }
+            });
+
+            function initializeSlider() {
+                // Create dots
+                for (let i = 0; i < totalSlides; i++) {
+                    const dot = document.createElement('div');
+                    dot.classList.add('dot');
+                    if (i === 0) dot.classList.add('active');
+                    dot.addEventListener('click', () => goToSlide(i));
+                    dotsContainer.appendChild(dot);
+                }
+
+                // Initialize scroll handling
+                window.addEventListener('scroll', () => {
+                    requestAnimationFrame(() => {
+                        const scrollPosition = window.scrollY;
+                        const windowHeight = window.innerHeight;
+                        const newSlide = Math.floor(scrollPosition / windowHeight);
+                        
+                        if (newSlide !== currentSlide && newSlide >= 0 && newSlide < totalSlides) {
+                            currentSlide = newSlide;
+                            slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+                            updateDots();
+                            updateTextColor();
+                        }
+                    });
+                });
+
+                // Initial color update
+                updateTextColor();
             }
 
-            function updateDots() {
-                document.querySelectorAll('.dot').forEach((dot, index) => {
-                    dot.classList.toggle('active', index === currentSlide);
-                });
+            function updateTextColor() {
+                if (!welcomeText) return;
+                
+                const currentSlideElement = slides[currentSlide];
+                if (!currentSlideElement) return;
+
+                const img = currentSlideElement.querySelector('img');
+                if (!img || !img.complete) return;
+
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                canvas.width = 1;
+                canvas.height = 1;
+
+                try {
+                    context.drawImage(img, 0, 0, 1, 1);
+                    const [r, g, b] = context.getImageData(0, 0, 1, 1).data;
+                    
+                    // Calculate perceived brightness
+                    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+                    
+                    // Set text color based on brightness
+                    welcomeText.style.color = brightness < 128 ? '#ffffff' : '#000000';
+                    console.log(`Slide ${currentSlide}: RGB(${r},${g},${b}), Brightness: ${brightness}`);
+                } catch (error) {
+                    console.error('Error updating text color:', error);
+                    welcomeText.style.color = '#ffffff';
+                }
             }
 
             function goToSlide(n) {
@@ -186,41 +250,6 @@
 
             // Auto-advance slides every 5 seconds
             setInterval(nextSlide, 5000);
-
-            function updateTextColor() {
-                if (!welcomeText) {
-                    console.log("welcomeText is null");
-                    return;
-                }
-                const currentSlideElement = slides[currentSlide];
-                if (!currentSlideElement) {
-                    console.log("currentSlideElement is null");
-                    return;
-                }
-
-                const imageContainer = currentSlideElement.querySelector('img');
-                if (!imageContainer) {
-                    console.log("imageContainer is null");
-                    return;
-                }
-
-                const backgroundColor = window.getComputedStyle(imageContainer).backgroundColor;
-                console.log("backgroundColor:", backgroundColor);
-                const rgbValues = backgroundColor.match(/\d+/g);
-                console.log("rgbValues:", rgbValues);
-
-                if (rgbValues && rgbValues.length === 3) {
-                    const invertedR = 255 - parseInt(rgbValues[0], 10);
-                    const invertedG = 255 - parseInt(rgbValues[1], 10);
-                    const invertedB = 255 - parseInt(rgbValues[2], 10);
-
-                    const invertedColor = `rgb(${invertedR}, ${invertedG}, ${invertedB})`;
-                    console.log("invertedColor:", invertedColor);
-                    welcomeText.style.color = invertedColor;
-                }
-            }
-            updateTextColor();
-            window.addEventListener('resize', updateTextColor);
         });
     </script>
     <script>
