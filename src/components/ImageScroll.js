@@ -151,7 +151,7 @@ const ImageScroll = () => {
         {images.map((src, index) => (
           <div 
             key={index}
-            className={`h-screen w-full relative transition-opacity duration-1000 opacity-0`}
+            className={`h-screen w-full relative transition-opacity duration-1000 opacity-100`}
           >
             <Image
               src={src}
