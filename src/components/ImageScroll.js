@@ -77,7 +77,7 @@ const ImageScroll = () => {
       {/* Welcome Title */}
       <div className="fixed top-0 left-0 w-full z-50 p-6">
         <h1 className="text-4xl md:text-6xl font-bold text-center overlay-text">
-          Welcome v Haji!
+          Welcome to Haji
         </h1>
       </div>
 
