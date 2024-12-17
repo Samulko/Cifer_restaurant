@@ -42,6 +42,7 @@ const ImageScroll = () => {
     function raf(time) {
       lenis.raf(time);
       requestAnimationFrame(raf);
+      lenis.raf(time);
     }
 
     requestAnimationFrame(raf);
@@ -69,28 +70,43 @@ const ImageScroll = () => {
     });
 
     const updateTextColor = () => {
-      if (!welcomeTextRef.current) return;
+      if (!welcomeTextRef.current) {
+        console.log("welcomeTextRef is null");
+        return;
+      }
       const currentSlideElement = scrollContainerRef.current.children[currentSlide];
-      if (!currentSlideElement) return;
+      if (!currentSlideElement) {
+        console.log("currentSlideElement is null");
+        return;
+      }
       const imageContainer = currentSlideElement.querySelector('.image-container');
-      if (!imageContainer) return;
+      if (!imageContainer) {
+        console.log("imageContainer is null");
+        return;
+      }
 
       const backgroundColor = window.getComputedStyle(imageContainer).backgroundColor;
+      console.log("backgroundColor:", backgroundColor);
       const rgbValues = backgroundColor.match(/\d+/g);
+      console.log("rgbValues:", rgbValues);
 
       if (rgbValues && rgbValues.length === 3) {
         const invertedR = 255 - parseInt(rgbValues[0], 10);
         const invertedG = 255 - parseInt(rgbValues[1], 10);
         const invertedB = 255 - parseInt(rgbValues[2], 10);
 
-        welcomeTextRef.current.style.color = `rgb(${invertedR}, ${invertedG}, ${invertedB})`;
+        const invertedColor = `rgb(${invertedR}, ${invertedG}, ${invertedB})`;
+        console.log("invertedColor:", invertedColor);
+        welcomeTextRef.current.style.color = invertedColor;
       }
     };
 
     updateTextColor();
+    console.log("welcomeTextRef after initial render:", welcomeTextRef.current);
 
     lenis.on('scroll', () => {
       const newSlide = Math.round(lenis.scroll / window.innerHeight);
+      console.log("newSlide:", newSlide, "currentSlide:", currentSlide);
       if (newSlide !== currentSlide) {
         setCurrentSlide(newSlide);
         updateTextColor();
