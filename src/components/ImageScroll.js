@@ -7,8 +7,9 @@ import Lenis from '@studio-freight/lenis';
 const ImageScroll = () => {
   const scrollContainerRef = useRef(null);
   const welcomeTextRef = useRef(null);
+  const diningTextRef = useRef(null);
   const [currentSlide, setCurrentSlide] = useState(0);
-  
+
   const images = [
     '/images/DSC_3061-HDR.webp',
     '/images/DSC_2299-HDR.webp',
@@ -19,6 +20,51 @@ const ImageScroll = () => {
     '/images/DSC_2905-HDR.webp',
     '/images/DSC_3016-HDR.webp'
   ];
+
+  const texts = [
+    { ref: welcomeTextRef, content: "Welcome to Haji" },
+    { ref: diningTextRef, content: "Fine Dining Experience" }
+  ];
+
+  const updateTextColor = () => {
+    if (!scrollContainerRef.current) return;
+
+    const currentSlideElement = scrollContainerRef.current.children[currentSlide];
+    if (!currentSlideElement) return;
+
+    const img = currentSlideElement.querySelector('img');
+    if (!img || !img.complete) return;
+
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    const { naturalWidth, naturalHeight } = img;
+    
+    canvas.width = naturalWidth;
+    canvas.height = naturalHeight;
+
+    try {
+      context.drawImage(img, 0, 0);
+      const centerX = Math.floor(naturalWidth / 2);
+      const centerY = Math.floor(naturalHeight / 2);
+      const pixelData = context.getImageData(centerX, centerY, 1, 1).data;
+      
+      const brightness = (pixelData[0] * 299 + pixelData[1] * 587 + pixelData[2] * 114) / 1000;
+      const textColor = brightness < 128 ? '#ffffff' : '#000000';
+      
+      const currentText = texts[currentSlide];
+      if (currentText && currentText.ref.current) {
+        currentText.ref.current.style.color = textColor;
+      }
+      
+      console.log(`Slide ${currentSlide}: RGB(${pixelData[0]},${pixelData[1]},${pixelData[2]}), Brightness: ${brightness}`);
+    } catch (error) {
+      console.error('Error updating text color:', error);
+    }
+  };
+
+  useEffect(() => {
+    updateTextColor();
+  }, [currentSlide]);
 
   useEffect(() => {
     if (!scrollContainerRef.current) return;
@@ -42,125 +88,59 @@ const ImageScroll = () => {
     function raf(time) {
       lenis.raf(time);
       requestAnimationFrame(raf);
-      lenis.raf(time);
     }
 
     requestAnimationFrame(raf);
 
-    // Intersection Observer for animations
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('animate-fade-in');
-            entry.target.classList.remove('opacity-0');
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      {
-        threshold: 0.2,
-        root: scrollContainerRef.current
-      }
-    );
-
-    const imageContainers = document.querySelectorAll('.image-container');
-    imageContainers.forEach((img) => {
-      observer.observe(img);
-    });
-
-    const updateTextColor = () => {
-      if (!welcomeTextRef.current) {
-        console.log("welcomeTextRef is null");
-        return;
-      }
-      const currentSlideElement = scrollContainerRef.current.children[currentSlide];
-      if (!currentSlideElement) {
-        console.log("currentSlideElement is null");
-        return;
-      }
-      const imageContainer = currentSlideElement.querySelector('.image-container');
-      if (!imageContainer) {
-        console.log("imageContainer is null");
-        return;
-      }
-
-      const backgroundColor = window.getComputedStyle(imageContainer).backgroundColor;
-      console.log("backgroundColor:", backgroundColor);
-      const rgbValues = backgroundColor.match(/\d+/g);
-      console.log("rgbValues:", rgbValues);
-
-      if (rgbValues && rgbValues.length === 3) {
-        const invertedR = 255 - parseInt(rgbValues[0], 10);
-        const invertedG = 255 - parseInt(rgbValues[1], 10);
-        const invertedB = 255 - parseInt(rgbValues[2], 10);
-
-        const invertedColor = `rgb(${invertedR}, ${invertedG}, ${invertedB})`;
-        console.log("invertedColor:", invertedColor);
-        welcomeTextRef.current.style.color = invertedColor;
-      }
-    };
-
-    updateTextColor();
-    console.log("welcomeTextRef after initial render:", welcomeTextRef.current);
-
     lenis.on('scroll', () => {
-      const newSlide = Math.round(lenis.scroll / window.innerHeight);
-      console.log("newSlide:", newSlide, "currentSlide:", currentSlide);
-      if (newSlide !== currentSlide) {
+      const newSlide = Math.floor(lenis.scroll / window.innerHeight);
+      if (newSlide !== currentSlide && newSlide >= 0 && newSlide < images.length) {
         setCurrentSlide(newSlide);
-        updateTextColor();
       }
     });
-
-    window.addEventListener('resize', updateTextColor);
 
     return () => {
       lenis.destroy();
-      observer.disconnect();
-      window.removeEventListener('resize', updateTextColor);
     };
   }, [currentSlide]);
 
   return (
     <div className="fixed inset-0 bg-black">
-      {/* Welcome Title */}
-      <div className="fixed top-0 left-0 w-full z-50 p-6">
-        <h1 ref={welcomeTextRef} className="text-4xl md:text-6xl font-bold text-center overlay-text">
-          Welcome to Haji
+      {texts.map((text, index) => (
+        <h1
+          key={index}
+          ref={text.ref}
+          className={`fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 text-4xl font-light tracking-tight transition-all duration-700 ${
+            index === currentSlide ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
+          {text.content}
         </h1>
-      </div>
+      ))}
 
-      {/* Images Container */}
       <div 
         ref={scrollContainerRef}
         className="h-screen overflow-y-auto"
       >
         {images.map((src, index) => (
           <div 
-            key={src} 
-            className="relative h-screen w-full"
+            key={index}
+            className={`h-screen w-full relative transition-opacity duration-1000 ${
+              index === currentSlide ? 'opacity-100' : 'opacity-0'
+            }`}
           >
-            {/* Divider */}
-            {index > 0 && (
-              <div className="absolute top-0 left-0 w-full h-16 z-10 bg-gradient-to-b from-black to-transparent" />
-            )}
-            
-            {/* Image Container */}
-            <div className="image-container relative w-full h-full flex items-center justify-center overflow-hidden opacity-0 transition-all duration-1000">
-              <div className="relative w-[120%] h-full transition-all duration-700 hover:brightness-110">
-                <Image
-                  src={src}
-                  alt={`Restaurant ambiance ${index + 1}`}
-                  fill
-                  className="object-cover"
-                  sizes="120vw"
-                  priority={index === 0}
-                  loading={index === 0 ? "eager" : "lazy"}
-                  quality={90}
-                />
-              </div>
-            </div>
+            <Image
+              src={src}
+              alt={`Slide ${index + 1}`}
+              fill
+              style={{ objectFit: 'cover' }}
+              priority={index === 0}
+              onLoad={() => {
+                if (index === currentSlide) {
+                  updateTextColor();
+                }
+              }}
+            />
           </div>
         ))}
       </div>
