@@ -1,11 +1,13 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Lenis from '@studio-freight/lenis';
 
 const ImageScroll = () => {
   const scrollContainerRef = useRef(null);
+  const welcomeTextRef = useRef(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
   
   const images = [
     '/images/DSC_3061-HDR.webp',
@@ -66,17 +68,49 @@ const ImageScroll = () => {
       observer.observe(img);
     });
 
+    const updateTextColor = () => {
+      if (!welcomeTextRef.current) return;
+      const currentSlideElement = scrollContainerRef.current.children[currentSlide];
+      if (!currentSlideElement) return;
+      const imageContainer = currentSlideElement.querySelector('.image-container');
+      if (!imageContainer) return;
+
+      const backgroundColor = window.getComputedStyle(imageContainer).backgroundColor;
+      const rgbValues = backgroundColor.match(/\d+/g);
+
+      if (rgbValues && rgbValues.length === 3) {
+        const invertedR = 255 - parseInt(rgbValues[0], 10);
+        const invertedG = 255 - parseInt(rgbValues[1], 10);
+        const invertedB = 255 - parseInt(rgbValues[2], 10);
+
+        welcomeTextRef.current.style.color = `rgb(${invertedR}, ${invertedG}, ${invertedB})`;
+      }
+    };
+
+    updateTextColor();
+
+    lenis.on('scroll', () => {
+      const newSlide = Math.round(lenis.scroll / window.innerHeight);
+      if (newSlide !== currentSlide) {
+        setCurrentSlide(newSlide);
+        updateTextColor();
+      }
+    });
+
+    window.addEventListener('resize', updateTextColor);
+
     return () => {
       lenis.destroy();
       observer.disconnect();
+      window.removeEventListener('resize', updateTextColor);
     };
-  }, []);
+  }, [currentSlide]);
 
   return (
     <div className="fixed inset-0 bg-black">
       {/* Welcome Title */}
       <div className="fixed top-0 left-0 w-full z-50 p-6">
-        <h1 className="text-4xl md:text-6xl font-bold text-center overlay-text">
+        <h1 ref={welcomeTextRef} className="text-4xl md:text-6xl font-bold text-center overlay-text">
           Welcome to Haji
         </h1>
       </div>
