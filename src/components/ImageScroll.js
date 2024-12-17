@@ -10,7 +10,6 @@ const ImageScroll = () => {
   const welcomeTextRef = useRef(null);
   const diningTextRef = useRef(null);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
 
   const images = [
     '/images/DSC_3061-HDR.webp',
@@ -98,37 +97,16 @@ const ImageScroll = () => {
       const scrollY = lenis.scroll;
       const windowHeight = window.innerHeight;
       const newSlide = Math.floor(scrollY / windowHeight);
-      const scrollProgress = (scrollY % windowHeight) / windowHeight;
 
-
-      if (newSlide !== currentSlide && newSlide >= 0 && newSlide < images.length && !isTransitioning) {
-        if (scrollProgress > 0.1) {
-          setIsTransitioning(true);
-          const prevSlide = currentSlide;
+      if (newSlide !== currentSlide && newSlide >= 0 && newSlide < images.length) {
           setCurrentSlide(newSlide);
-
-          if (scrollContainerRef.current) {
-            const prevSlideElement = scrollContainerRef.current.children[prevSlide];
-            const newSlideElement = scrollContainerRef.current.children[newSlide];
-
-            if (newSlideElement && prevSlideElement) {
-              gsap.timeline()
-                .to(prevSlideElement, { opacity: 0, duration: 0.5, ease: 'power2.inOut' })
-                .to(newSlideElement, { opacity: 1, duration: 0.5, ease: 'power2.inOut', onComplete: () => setIsTransitioning(false) }, "<");
-            } else {
-              setIsTransitioning(false);
-            }
-          } else {
-            setIsTransitioning(false);
-          }
-        }
       }
     });
 
     return () => {
       lenis.destroy();
     };
-  }, [currentSlide, isTransitioning]);
+  }, [currentSlide]);
 
   return (
     <div className="fixed inset-0 bg-black">
@@ -151,7 +129,7 @@ const ImageScroll = () => {
         {images.map((src, index) => (
           <div 
             key={index}
-            className={`h-screen w-full relative transition-opacity duration-1000 opacity-100`}
+            className={`h-screen w-full relative`}
           >
             <Image
               src={src}
