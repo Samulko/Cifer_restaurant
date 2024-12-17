@@ -33,35 +33,36 @@ const ImageScroll = () => {
     const currentSlideElement = scrollContainerRef.current.children[currentSlide];
     if (!currentSlideElement) return;
 
-    const img = currentSlideElement.querySelector('img');
-    if (!img || !img.complete) return;
+    const imgContainer = currentSlideElement;
+    if (!imgContainer) return;
 
-    const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d');
-    const { naturalWidth, naturalHeight } = img;
-    
-    canvas.width = naturalWidth;
-    canvas.height = naturalHeight;
+    const computedStyle = getComputedStyle(imgContainer);
+    const backgroundColor = computedStyle.backgroundColor;
 
-    try {
-      context.drawImage(img, 0, 0);
-      const centerX = Math.floor(naturalWidth / 2);
-      const centerY = Math.floor(naturalHeight / 2);
-      const pixelData = context.getImageData(centerX, centerY, 1, 1).data;
-      
-      const brightness = (pixelData[0] * 299 + pixelData[1] * 587 + pixelData[2] * 114) / 1000;
-      const textColor = brightness < 128 ? '#000000' : '#ffffff';
-      
-      const currentText = texts[currentSlide];
-      if (currentText && currentText.ref.current) {
-        currentText.ref.current.style.color = textColor;
-      }
-      
-      console.log(`Slide ${currentSlide}: RGB(${pixelData[0]},${pixelData[1]},${pixelData[2]}), Brightness: ${brightness}`);
-    } catch (error) {
-      console.error('Error updating text color:', error);
+    const rgbMatch = backgroundColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+
+    if (rgbMatch) {
+      const r = parseInt(rgbMatch[1], 10);
+      const g = parseInt(rgbMatch[2], 10);
+      const b = parseInt(rgbMatch[3], 10);
+
+      const invertedR = 255 - r;
+      const invertedG = 255 - g;
+      const invertedB = 255 - b;
+
+      const textColor = `rgb(${invertedR}, ${invertedG}, ${invertedB})`;
+
+      texts.forEach(textItem => {
+        if (textItem.ref.current) {
+          textItem.ref.current.style.color = textColor;
+        }
+      });
+      console.log(`Slide ${currentSlide}: Background RGB(${r},${g},${b}), Inverted RGB: ${invertedR},${invertedG},${invertedB}`);
+    } else {
+        console.log(`Slide ${currentSlide}: Could not parse background color: ${backgroundColor}`);
     }
   };
+
 
   useEffect(() => {
     updateTextColor();
@@ -130,6 +131,7 @@ const ImageScroll = () => {
           <div 
             key={index}
             className={`h-screen w-full relative`}
+            style={{ backgroundColor: 'rgb(0,0,0)' }}
           >
             <Image
               src={src}
