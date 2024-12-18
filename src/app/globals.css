@@ -45,6 +45,13 @@ body {
   mix-blend-mode: difference;
 }
 
+.scroll-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 200;
+}
+
 .full-screen-menu {
   position: fixed;
   top: 0;

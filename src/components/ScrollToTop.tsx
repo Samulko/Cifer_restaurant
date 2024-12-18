@@ -8,15 +8,19 @@ const ScrollToTop = () => {
   useEffect(() => {
     const toggleVisibility = () => {
       if (typeof window !== 'undefined') {
-        const scrolled = window.scrollY;
-        setIsVisible(scrolled > 100);
+        const scrolled = document.documentElement.scrollTop;
+        setIsVisible(scrolled > 50);
       }
     };
 
-    window.addEventListener('scroll', toggleVisibility);
+    const handleScroll = () => {
+      requestAnimationFrame(toggleVisibility);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
     toggleVisibility(); // Check initial position
     
-    return () => window.removeEventListener('scroll', toggleVisibility);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const scrollToTop = () => {
@@ -31,13 +35,13 @@ const ScrollToTop = () => {
   return (
     <button 
       onClick={scrollToTop}
-      className={`fixed bottom-8 right-8 w-14 h-14 bg-pink-100 text-black border-2 border-black
-                 rounded-full cursor-pointer hover:bg-pink-200 transition-all duration-300
-                 z-[100] flex items-center justify-center text-3xl font-bold shadow-xl
-                 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-0 pointer-events-none'}`}
+      className={`scroll-to-top w-14 h-14 bg-white text-black border-2 border-black
+                 rounded-full cursor-pointer hover:bg-gray-100 transition-all duration-300
+                 flex items-center justify-center text-3xl font-bold shadow-2xl
+                 ${isVisible ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}`}
       aria-label="Scroll to top"
     >
-      ⬆
+      ↑
     </button>
   );
 };
