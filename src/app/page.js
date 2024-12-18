@@ -29,8 +29,13 @@ export default function Home() {
       </SmoothScroll>
       <button 
         id="scrollToTop" 
-        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} 
-        className="fixed top-4 right-4 w-12 h-12 bg-blue-600 text-white border-none rounded cursor-pointer hover:bg-blue-700 transition-colors z-50"
+        onClick={() => {
+          const lenis = document.documentElement.lenis;
+          if (lenis) {
+            lenis.scrollTo(0, { duration: 1.8 });
+          }
+        }} 
+        className="fixed bottom-8 right-8 w-12 h-12 bg-white/10 backdrop-blur-sm text-white border border-white/20 rounded-full cursor-pointer hover:bg-white/20 transition-colors z-50 flex items-center justify-center text-2xl"
       >
         ↑
       </button>
