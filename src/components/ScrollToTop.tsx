@@ -31,13 +31,13 @@ const ScrollToTop = () => {
   return (
     <button 
       onClick={scrollToTop}
-      className={`fixed bottom-8 right-8 w-14 h-14 bg-white text-black border-2 border-black
-                 rounded-full cursor-pointer hover:bg-gray-100 transition-all duration-300
-                 z-[9999] flex items-center justify-center text-2xl shadow-lg
-                 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'}`}
+      className={`fixed bottom-8 right-8 w-14 h-14 bg-pink-100 text-black border-2 border-black
+                 rounded-full cursor-pointer hover:bg-pink-200 transition-all duration-300
+                 z-[100] flex items-center justify-center text-3xl font-bold shadow-xl
+                 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-0 pointer-events-none'}`}
       aria-label="Scroll to top"
     >
-      ↑
+      ⬆
     </button>
   );
 };
