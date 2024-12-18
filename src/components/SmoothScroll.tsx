@@ -45,6 +45,7 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
     return () => {
       lenis.destroy();
     };
+  }
   }, []);
 
   if (!mounted) {
