@@ -41,5 +41,9 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
     return null;
   }
 
-  return <div className="smooth-scroll-wrapper">{children}</div>;
+  return (
+    <div className="smooth-scroll-wrapper h-screen overflow-y-auto">
+      {children}
+    </div>
+  );
 }
