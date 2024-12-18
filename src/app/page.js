@@ -19,15 +19,16 @@ export default function Home() {
     setMounted(true);
   }, []);
 
-  if (!mounted) {
-    return null;
-  }
-
   return (
     <main className="relative min-h-screen bg-black">
       <Navigation />
-      <ImageScroll />
-      <ScrollToTop />
+      {mounted && (
+        <>
+          <ImageScroll />
+          <ScrollToTop />
+        </>
+      )}
+      <div className="h-[200vh]"></div>
     </main>
   );
 }
