@@ -14,6 +14,7 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
     setMounted(true);
     const lenis = new Lenis({
       wrapper: document.documentElement,
+      content: document.documentElement,
       duration: 1.8,
       smoothWheel: true,
       wheelMultiplier: 1.0,
@@ -25,6 +26,11 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
       infinite: false,
       orientation: 'vertical',
     });
+
+    // Ensure window.lenis is set immediately
+    if (typeof window !== 'undefined') {
+      window.lenis = lenis;
+    }
 
     function raf(time: number) {
       lenis.raf(time);

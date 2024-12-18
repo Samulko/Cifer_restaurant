@@ -7,10 +7,6 @@ const ImageScroll = dynamic(() => import('../components/ImageScroll'), {
   ssr: false
 });
 
-const SmoothScroll = dynamic(() => import('../components/SmoothScroll'), {
-  ssr: false
-});
-
 export default function Home() {
   const [mounted, setMounted] = useState(false);
 
@@ -24,9 +20,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-black">
-      <SmoothScroll>
-        <ImageScroll />
-      </SmoothScroll>
+      <ImageScroll />
       <button 
         id="scrollToTop" 
         onClick={() => {
