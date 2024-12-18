@@ -7,6 +7,10 @@ const ImageScroll = dynamic(() => import('../components/ImageScroll'), {
   ssr: false
 });
 
+const ScrollToTop = dynamic(() => import('../components/ScrollToTop'), {
+  ssr: false
+});
+
 export default function Home() {
   const [mounted, setMounted] = useState(false);
 
@@ -21,20 +25,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-black">
       <ImageScroll />
-      <button 
-        id="scrollToTop" 
-        onClick={() => {
-          if (typeof window !== 'undefined') {
-            const lenis = window.lenis;
-            if (lenis) {
-              lenis.scrollTo(0, { immediate: false, duration: 1.8 });
-            }
-          }
-        }} 
-        className="fixed top-8 right-8 w-10 h-10 bg-white text-black border-none rounded-full cursor-pointer hover:bg-gray-200 transition-colors z-[60] flex items-center justify-center text-xl shadow-lg"
-      >
-        ↑
-      </button>
+      <ScrollToTop />
     </main>
   );
 }

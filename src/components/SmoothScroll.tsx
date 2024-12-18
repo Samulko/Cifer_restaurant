@@ -12,25 +12,23 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
 
   useEffect(() => {
     setMounted(true);
-    const lenis = new Lenis({
-      wrapper: document.documentElement,
-      content: document.documentElement,
-      duration: 1.8,
-      smoothWheel: true,
-      wheelMultiplier: 1.0,
-      touchMultiplier: 1.5,
-      syncTouch: true,
-      syncTouchLerp: 0.05,
-      touchInertiaMultiplier: 12,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(5, -10 * t)),
-      infinite: false,
-      orientation: 'vertical',
-    });
-
-    // Ensure window.lenis is set immediately
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && !window.lenis) {
+      const lenis = new Lenis({
+        wrapper: document.documentElement,
+        content: document.documentElement,
+        duration: 1.8,
+        smoothWheel: true,
+        wheelMultiplier: 1.0,
+        touchMultiplier: 1.5,
+        syncTouch: true,
+        syncTouchLerp: 0.05,
+        touchInertiaMultiplier: 12,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(5, -10 * t)),
+        infinite: false,
+        orientation: 'vertical',
+      });
+      
       window.lenis = lenis;
-    }
 
     function raf(time: number) {
       lenis.raf(time);
