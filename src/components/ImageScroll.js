@@ -37,6 +37,9 @@ const ImageScroll = () => {
       infinite: false
     });
 
+    // Make lenis instance available globally
+    window.lenis = lenis;
+
     function raf(time) {
       lenis.raf(time);
       requestAnimationFrame(raf);
@@ -93,6 +96,7 @@ const ImageScroll = () => {
       {/* Images Container */}
       <div 
         ref={scrollContainerRef}
+        id="image-scroll-container"
         className="h-screen overflow-y-auto"
       >
         {images.map((src, index) => (

@@ -1,45 +1,91 @@
-# @Instructions.md
+<purpose>
+    You create a concise instruction file describing the application being built.
+</purpose>
 
-## Environment
-- **Node.js:** LTS (e.g. 18.x)
-- **Package Manager:** npm
-- **Framework:** Next.js (e.g. v13.x)
-- **Styling:** CSS modules or Tailwind CSS
-- **Animations and Transitions:** GSAP
-- **Smooth Scrolling:** Lenis (e.g. v1.0.42)
-- **Server-Side Email Handling:** Nodemailer
-- **Protocol:** HTTP/3 if supported by hosting platform
+<instructions>
+    <instruction>Create a brief description of the [[restaurant website]].</instruction>
+    <instruction>
+        Include details about the software stack.
+        <core>
+            Next.js (v15.1.0)
+            React (v18.2.0)
+            TypeScript
+        </core>
+        <styling-ui>
+            TailwindCSS (v3.4.16)
+            GSAP (v3.12.5)
+        </styling-ui>
+        <animation-scrolling>
+            Lenis (Smooth scrolling)
+            @studio-freight/lenis (v1.0.42)
+        </animation-scrolling>
+        <development>
+            Node.js
+            PostCSS
+            Autoprefixer
+        </development>
+        <image-optimization>
+            Next/Image for image optimization
+            WebP format for images
+        </image-optimization>
+        The application is built as a modern single-page scroll experience with smooth animations and transitions, optimized image loading, and responsive design.
+    </instruction>
+    <instruction>Use chain-of-thought reasoning (CoT) in all responses.</instruction>
+    <instruction>Follow best practices when writing software for software-stack mentioned above.</instruction>
+    <instruction>Keep the final output organized and brief.</instruction>
+    <instruction>Use the provided examples to understand the structure of the final output.</instruction>
+</instructions>
 
-## Platforms and Tools
-- **Hosting/Deployment:** Vercel (or similar)
-- **IDE Integration:** Compatible with LLM-powered IDEs
-- **Image Handling:** Next.js Image component
-- **Version Control:** Git and GitHub
+<sections>
+    <software-stack>
+        <core>
+            Next.js (v15.1.0)
+            React (v18.2.0)
+            TypeScript
+        </core>
+        <styling-ui>
+            TailwindCSS (v3.4.16)
+            GSAP (v3.12.5)
+        </styling-ui>
+        <animation-scrolling>
+            Lenis (Smooth scrolling)
+            @studio-freight/lenis (v1.0.42)
+        </animation-scrolling>
+        <development>
+            Node.js
+            PostCSS
+            Autoprefixer
+        </development>
+        <image-optimization>
+            Next/Image for image optimization
+            WebP format for images
+        </image-optimization>
+    </software-stack>
+    <appearance>
+        <detail>Main color scheme: Light pink and off-white</detail>
+        <detail>Layout: Scrolling website, responsive design, starting with a main image and text in the middle. Then followed by a chunk of text and then images once more.</detail>
+        <detail>Typography: Playwrite Slovensko Guides</detail>
+    </appearance>
+</sections>
 
-## Scrolling Experience
-- **Single-Page Scroll:** The site should be a vertical scrolling experience instead of separate pages.
-- **Sections:** Instead of navigating with links, each section (e.g. intro, about, menu/events, reservation form, contact) appears as the user scrolls down.
-- **Animations:** Use GSAP for smooth section transitions and subtle element animations.
-- **Lenis:** Apply Lenis for enhanced scrolling feel.
+<examples>
+    <example>
+        <description>An online blog application built with a LAMP stack</description>
+        <sample-stack>LAMP</sample-stack>
+        <sample-appearance>Light blue and white colors, simple grid layout, sans-serif fonts</sample-appearance>
+    </example>
+    <example>
+        <description>An e-commerce storefront using a MEAN stack</description>
+        <sample-stack>MEAN</sample-stack>
+        <sample-appearance>Green and white colors, card-based layout, modern sans-serif fonts</sample-appearance>
+    </example>
+    <example>
+        <description>A project management tool running on a MERN stack</description>
+        <sample-stack>MERN</sample-stack>
+        <sample-appearance>Gray and white colors, column layout, clean sans-serif fonts</sample-appearance>
+    </example>
+</examples>
 
-## Content Structure
-- **Introduction Section:** Large hero image and brand name
-- **About Section:** Text and images about the restaurant/event space story
-- **Menu/Events Section:** Images and short descriptions of offerings
-- **Reservation Section:** Simple form (Name, Email, Phone, Date, Time, Guests, Comments) that sends data via the API route using Nodemailer
-- **Contact Section:** Address, phone, email, map image
-- **Footer:** Basic info and social links
-
-## Components
-- **NavBar:** Minimal or fixed icon since scrolling replaces traditional links
-- **Footer:** Simple and visible at the end of the scroll
-- **ReservationForm:** Basic validation, API route at `/api/reservation` sends email
-
-## Content
-- **Images:** In `public/images/`
-- **Text:** Clear and short
-- **Alt Text:** For all images
-
-## Continuous Editing
-- This file can grow as we add new sections or change the scrolling flow.
-- Update library versions, styles, or sections as needed.
+<user-prompt>
+    Provide the instructions for [[application-name]] which uses [[software-stack]] and has an [[appearance]] as described.
+</user-prompt>

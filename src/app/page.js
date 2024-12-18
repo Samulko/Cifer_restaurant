@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Navigation from '../components/Navigation';
 import ScrollToTop from '../components/ScrollToTop';  // Direct import
+import ReservationButton from '../components/ReservationButton';  // Import the new component
 
 const ImageScroll = dynamic(() => import('../components/ImageScroll'), {
   ssr: false
@@ -21,6 +22,7 @@ export default function Home() {
       <Navigation />
       {mounted && <ImageScroll />}
       <ScrollToTop />
+      <ReservationButton />
       <div className="h-[200vh]"></div> {/* This creates scrollable space */}
     </main>
   );
