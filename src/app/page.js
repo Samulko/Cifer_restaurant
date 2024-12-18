@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
+import Navigation from '../components/Navigation';
 
 const ImageScroll = dynamic(() => import('../components/ImageScroll'), {
   ssr: false
@@ -23,7 +24,8 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-black">
+    <main className="relative min-h-screen bg-black">
+      <Navigation />
       <ImageScroll />
       <ScrollToTop />
     </main>
