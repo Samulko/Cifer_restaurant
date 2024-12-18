@@ -13,6 +13,7 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
   useEffect(() => {
     setMounted(true);
     const lenis = new Lenis({
+      wrapper: document.documentElement,
       duration: 1.8,
       smoothWheel: true,
       wheelMultiplier: 1.0,
@@ -31,6 +32,11 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
     }
 
     requestAnimationFrame(raf);
+    
+    // Make lenis instance available globally
+    if (typeof window !== 'undefined') {
+      window.lenis = lenis;
+    }
 
     return () => {
       lenis.destroy();

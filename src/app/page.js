@@ -30,12 +30,11 @@ export default function Home() {
       <button 
         id="scrollToTop" 
         onClick={() => {
-          const scrollContainer = document.querySelector('.smooth-scroll-wrapper');
-          if (scrollContainer) {
-            scrollContainer.scrollTo({
-              top: 0,
-              behavior: 'smooth'
-            });
+          if (typeof window !== 'undefined') {
+            const lenis = window.lenis;
+            if (lenis) {
+              lenis.scrollTo(0, { immediate: false, duration: 1.8 });
+            }
           }
         }} 
         className="fixed top-8 right-8 w-10 h-10 bg-white text-black border-none rounded-full cursor-pointer hover:bg-gray-200 transition-colors z-[60] flex items-center justify-center text-xl shadow-lg"
