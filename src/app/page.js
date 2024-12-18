@@ -38,7 +38,7 @@ export default function Home() {
             });
           }
         }} 
-        className="fixed bottom-8 right-8 w-12 h-12 bg-white/10 backdrop-blur-sm text-white border border-white/20 rounded-full cursor-pointer hover:bg-white/20 transition-colors z-50 flex items-center justify-center text-2xl"
+        className="fixed top-8 right-8 w-10 h-10 bg-white text-black border-none rounded-full cursor-pointer hover:bg-gray-200 transition-colors z-[60] flex items-center justify-center text-xl shadow-lg"
       >
         ↑
       </button>
