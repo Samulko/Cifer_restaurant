@@ -7,11 +7,8 @@ const ScrollToTop = () => {
 
   useEffect(() => {
     const toggleVisibility = () => {
-      if (window.scrollY > 300) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
+      const scrolled = document.documentElement.scrollTop || document.body.scrollTop;
+      setIsVisible(scrolled > 300);
     };
 
     window.addEventListener('scroll', toggleVisibility);
@@ -30,10 +27,10 @@ const ScrollToTop = () => {
   return (
     <button 
       onClick={scrollToTop}
-      className={`fixed top-8 right-8 w-10 h-10 bg-white text-black border-none 
-                 rounded-full cursor-pointer hover:bg-gray-200 transition-all 
-                 z-[60] flex items-center justify-center text-xl shadow-lg
-                 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
+      className={`fixed bottom-8 right-8 w-12 h-12 bg-white text-black border-none 
+                 rounded-full cursor-pointer hover:bg-gray-200 transition-all duration-300
+                 z-[60] flex items-center justify-center text-2xl shadow-lg
+                 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'}`}
       aria-label="Scroll to top"
     >
       ↑
