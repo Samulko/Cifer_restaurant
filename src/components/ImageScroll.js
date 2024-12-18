@@ -82,10 +82,10 @@ const ImageScroll = () => {
           color: 'white'
         }}
       >
-        <h1 className="text-4xl md:text-6xl font-bold mb-4">
+        <h1 className="text-4xl md:text-6xl font-bold mb-4 [text-shadow:_2px_2px_10px_rgb(0_0_0_/_90%)]">
           Welcome to Haji
         </h1>
-        <p className="text-xl md:text-2xl">
+        <p className="text-xl md:text-2xl [text-shadow:_2px_2px_8px_rgb(0_0_0_/_90%)]">
           Fine Dining Experience
         </p>
       </div>
