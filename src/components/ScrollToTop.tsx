@@ -9,7 +9,7 @@ const ScrollToTop = () => {
     const toggleVisibility = () => {
       if (typeof window !== 'undefined') {
         const scrolled = window.scrollY;
-        setIsVisible(scrolled > 300);
+        setIsVisible(scrolled > 100);
       }
     };
 
@@ -31,10 +31,9 @@ const ScrollToTop = () => {
   return (
     <button 
       onClick={scrollToTop}
-      className={`fixed bottom-8 right-8 w-14 h-14 bg-black text-white border-2 border-white
-                 rounded-full cursor-pointer hover:bg-gray-800 transition-all duration-300
-                 z-[999] flex items-center justify-center text-2xl shadow-lg
-                 mix-blend-difference
+      className={`fixed bottom-8 right-8 w-14 h-14 bg-white text-black border-2 border-black
+                 rounded-full cursor-pointer hover:bg-gray-100 transition-all duration-300
+                 z-[9999] flex items-center justify-center text-2xl shadow-lg
                  ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'}`}
       aria-label="Scroll to top"
     >
