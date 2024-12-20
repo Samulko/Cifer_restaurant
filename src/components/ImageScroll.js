@@ -7,11 +7,34 @@ import Lenis from '@studio-freight/lenis';
 const ImageScroll = () => {
   const scrollContainerRef = useRef(null);
   
-  const images = [
-    '/images/DSC_3061-HDR.webp',
-    '/images/DSC_2299-HDR.webp',
-    '/images/DSC_2620-HDR.webp',
-    '/images/DSC_2689-HDR.webp',
+  const sections = [
+    {
+      id: 'home',
+      image: '/images/DSC_3061-HDR.webp',
+      title: 'Welcome to Haji',
+      description: 'Fine Dining Experience'
+    },
+    {
+      id: 'about',
+      image: '/images/DSC_2299-HDR.webp',
+      title: 'Our Story',
+      description: 'A Journey Through Flavors'
+    },
+    {
+      id: 'events',
+      image: '/images/DSC_2620-HDR.webp',
+      title: 'Special Events',
+      description: 'Celebrate With Us'
+    },
+    {
+      id: 'contact',
+      image: '/images/DSC_2689-HDR.webp',
+      title: 'Get in Touch',
+      description: 'Make a Reservation'
+    }
+  ];
+
+  const additionalImages = [
     '/images/DSC_2776-HDR.webp',
     '/images/DSC_2848-HDR.webp',
     '/images/DSC_2905-HDR.webp',
@@ -21,6 +44,7 @@ const ImageScroll = () => {
   useEffect(() => {
     if (!scrollContainerRef.current) return;
 
+    // Initialize Lenis with the scroll container
     const lenis = new Lenis({
       wrapper: scrollContainerRef.current,
       content: scrollContainerRef.current,
@@ -29,7 +53,7 @@ const ImageScroll = () => {
       direction: 'vertical',
       gestureDirection: 'vertical',
       smooth: true,
-      smoothTouch: true,
+      smoothTouch: false,
       touchMultiplier: 1.5,
       wheelMultiplier: 1.0,
       touchInertiaMultiplier: 12,
@@ -37,17 +61,19 @@ const ImageScroll = () => {
       infinite: false
     });
 
-    // Make lenis instance available globally
+    // Store lenis instance globally
     window.lenis = lenis;
 
+    let rafId = null;
     function raf(time) {
       lenis.raf(time);
-      requestAnimationFrame(raf);
+      rafId = requestAnimationFrame(raf);
     }
 
-    requestAnimationFrame(raf);
+    rafId = requestAnimationFrame(raf);
+    console.log('Lenis initialized');
 
-    // Intersection Observer for animations
+    // Intersection Observer for fade-in animation
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -70,56 +96,84 @@ const ImageScroll = () => {
     });
 
     return () => {
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+      }
       lenis.destroy();
+      window.lenis = null;
       observer.disconnect();
+      console.log('Lenis destroyed');
     };
   }, []);
 
   return (
     <div className="fixed inset-0 bg-black">
-      {/* Fixed centered text */}
-      <div 
-        className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center z-50"
-        style={{ 
-          mixBlendMode: 'difference',
-          color: 'white'
-        }}
-      >
-        <h1 className="text-4xl md:text-6xl font-bold mb-4 [text-shadow:_2px_2px_10px_rgb(0_0_0_/_90%)]">
-          Welcome to Haji
-        </h1>
-        <p className="text-xl md:text-2xl [text-shadow:_2px_2px_8px_rgb(0_0_0_/_90%)]">
-          Fine Dining Experience
-        </p>
-      </div>
-
-      {/* Images Container */}
       <div 
         ref={scrollContainerRef}
-        id="image-scroll-container"
         className="h-screen overflow-y-auto"
       >
-        {images.map((src, index) => (
-          <div 
-            key={src} 
+        {/* Main Sections */}
+        {sections.map((section, index) => (
+          <section 
+            key={section.id}
+            id={section.id}
             className="relative h-screen w-full"
           >
-            {/* Divider */}
             {index > 0 && (
               <div className="absolute top-0 left-0 w-full h-16 z-10 bg-gradient-to-b from-black to-transparent" />
             )}
             
-            {/* Image Container */}
             <div className="image-container relative w-full h-full flex items-center justify-center overflow-hidden opacity-0 transition-all duration-1000">
               <div className="relative w-[120%] h-full transition-all duration-700 hover:brightness-110">
                 <Image
-                  src={src}
-                  alt={`Restaurant ambiance ${index + 1}`}
+                  src={section.image}
+                  alt={section.title}
                   fill
                   className="object-cover"
                   sizes="120vw"
                   priority={index === 0}
                   loading={index === 0 ? "eager" : "lazy"}
+                  quality={90}
+                />
+              </div>
+
+              {/* Section Content Overlay */}
+              <div 
+                className="absolute inset-0 flex items-center justify-center text-center z-10"
+                style={{ 
+                  mixBlendMode: 'difference',
+                  color: 'white'
+                }}
+              >
+                <div>
+                  <h2 className="text-4xl md:text-6xl font-bold mb-4 [text-shadow:_2px_2px_10px_rgb(0_0_0_/_90%)]">
+                    {section.title}
+                  </h2>
+                  <p className="text-xl md:text-2xl [text-shadow:_2px_2px_8px_rgb(0_0_0_/_90%)]">
+                    {section.description}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+        ))}
+
+        {/* Additional Images */}
+        {additionalImages.map((src, index) => (
+          <div 
+            key={src} 
+            className="relative h-screen w-full"
+          >
+            <div className="absolute top-0 left-0 w-full h-16 z-10 bg-gradient-to-b from-black to-transparent" />
+            <div className="image-container relative w-full h-full flex items-center justify-center overflow-hidden opacity-0 transition-all duration-1000">
+              <div className="relative w-[120%] h-full transition-all duration-700 hover:brightness-110">
+                <Image
+                  src={src}
+                  alt={`Additional restaurant ambiance ${index + 1}`}
+                  fill
+                  className="object-cover"
+                  sizes="120vw"
+                  loading="lazy"
                   quality={90}
                 />
               </div>

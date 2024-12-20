@@ -1,0 +1,102 @@
+<purpose>
+    You create a concise instruction file describing the application being built.
+</purpose>
+
+<instructions>
+    <instruction>Create a brief description of the [[restaurant website]].</instruction>
+    <instruction>
+        Include details about the software stack.
+        <core>
+            Next.js (v15.1.0)
+            React (v18.2.0)
+            TypeScript
+        </core>
+        <styling-ui>
+            TailwindCSS (v3.4.16)
+            GSAP (v3.12.5)
+        </styling-ui>
+        <animation-scrolling>
+            Lenis (Smooth scrolling)
+            @studio-freight/lenis (v1.0.42)
+        </animation-scrolling>
+        <development>
+            Node.js
+            PostCSS
+            Autoprefixer
+        </development>
+        <image-optimization>
+            Next/Image for image optimization
+            WebP format for images
+        </image-optimization>
+        The application is built as a modern single-page scroll experience with smooth animations and transitions, optimized image loading, and responsive design.
+    </instruction>
+    <instruction>Use chain-of-thought reasoning (CoT) in all responses.</instruction>
+    <instruction>Follow best practices when writing software for software-stack mentioned above.</instruction>
+    <instruction>Keep the final output organized and brief.</instruction>
+    <instruction>Use the provided examples to understand the structure of the final output.</instruction>
+    <instruction>
+        Please help me create [feature] as a set of modular components.
+        For each component:
+        <ol>
+            <li>Keep files under 200 lines</li>
+            <li>Include comments explaining its single responsibility</li>
+            <li>Show how it connects with other components</li>
+            <li>Extract reusable logic into separate hooks or utility files</li>
+        </ol>
+    </instruction>
+
+</instructions>
+
+<sections>
+    <software-stack>
+        <core>
+            Next.js (v15.1.0)
+            React (v18.2.0)
+            TypeScript
+        </core>
+        <styling-ui>
+            TailwindCSS (v3.4.16)
+            GSAP (v3.12.5)
+        </styling-ui>
+        <animation-scrolling>
+            Lenis (Smooth scrolling)
+            @studio-freight/lenis (v1.0.42)
+        </animation-scrolling>
+        <development>
+            Node.js
+            PostCSS
+            Autoprefixer
+        </development>
+        <image-optimization>
+            Next/Image for image optimization
+            WebP format for images
+        </image-optimization>
+    </software-stack>
+    <appearance>
+        <detail>Main color scheme: Light pink and off-white</detail>
+        <detail>Layout: Scrolling website, responsive design, starting with a main image and text in the middle. Then followed by a chunk of text and then images once more.</detail>
+        <detail>Typography: Playwrite Slovensko Guides</detail>
+    </appearance>
+</sections>
+
+<examples>
+    <example>
+        <description>An online blog application built with a LAMP stack</description>
+        <sample-stack>LAMP</sample-stack>
+        <sample-appearance>Light blue and white colors, simple grid layout, sans-serif fonts</sample-appearance>
+    </example>
+    <example>
+        <description>An e-commerce storefront using a MEAN stack</description>
+        <sample-stack>MEAN</sample-stack>
+        <sample-appearance>Green and white colors, card-based layout, modern sans-serif fonts</sample-appearance>
+    </example>
+    <example>
+        <description>A project management tool running on a MERN stack</description>
+        <sample-stack>MERN</sample-stack>
+        <sample-appearance>Gray and white colors, column layout, clean sans-serif fonts</sample-appearance>
+    </example>
+</examples>
+
+<user-prompt>
+    Provide the instructions for [[application-name]] which uses [[software-stack]] and has an [[appearance]] as described.
+</user-prompt>
