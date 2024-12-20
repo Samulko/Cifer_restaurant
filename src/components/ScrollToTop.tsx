@@ -173,10 +173,4 @@ const ScrollToTop = () => {
   );
 };
 
-declare global {
-  interface Window {
-    lenis: any;
-  }
-}
-
 export default ScrollToTop;

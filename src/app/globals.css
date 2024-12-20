@@ -5,25 +5,46 @@
 :root {
   --foreground-rgb: 255, 255, 255;
   --background-rgb: 0, 0, 0;
+  --vh: 1vh;
+}
+
+html {
+  height: 100%;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
   color: rgb(var(--foreground-rgb));
   background: rgb(var(--background-rgb));
   font-family: 'Inter', sans-serif;
-  overflow-x: hidden;
+  height: 100%;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-.smooth-scroll-section {
-  position: relative;
-  height: 100vh;
-  width: 100vw;
+/* Use CSS variable for viewport height */
+.h-screen {
+  height: 100vh; /* Fallback */
+  height: calc(var(--vh, 1vh) * 100);
+}
+
+.min-h-screen {
+  min-height: 100vh; /* Fallback */
+  min-height: calc(var(--vh, 1vh) * 100);
+}
+
+/* Ensure sections are properly positioned for scroll targets */
+[id] {
+  scroll-margin-top: 0;
 }
 
 .image-container {
   position: relative;
   width: 100%;
   height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
   overflow: hidden;
 }
 
@@ -47,6 +68,7 @@ body {
   padding: 1rem;
   font-size: 1.25rem;
   transition: opacity 0.3s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .nav-menu:hover {
@@ -66,6 +88,7 @@ body {
   left: 0;
   width: 100vw;
   height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
   background: rgba(0, 0, 0, 0.95);
   z-index: 999;
   display: flex;
@@ -75,6 +98,7 @@ body {
   pointer-events: none;
   transition: all 0.3s ease;
   backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
 }
 
 .full-screen-menu.active {
@@ -93,6 +117,7 @@ body {
   font-size: 2.25rem;
   line-height: 2.5rem;
   color: white;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .full-screen-menu button:hover {
@@ -120,7 +145,65 @@ body {
   z-index: 1;
 }
 
-/* Ensure sections are properly positioned for scroll targets */
-[id] {
-  scroll-margin-top: 2rem;
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+  width: 0;
+  background: transparent;
+}
+
+/* Ensure smooth scrolling behavior */
+.lenis.lenis-smooth {
+  scroll-behavior: auto;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Ensure proper scroll container */
+.scroll-container {
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .nav-menu {
+    top: 1.5rem;
+    left: 1.5rem;
+  }
+
+  .scroll-to-top {
+    bottom: 1.5rem;
+    right: 1.5rem;
+  }
+
+  .full-screen-menu button {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+  }
+}
+
+/* Prevent text selection during scroll */
+.lenis.lenis-scrolling {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Better touch handling */
+@supports (-webkit-touch-callout: none) {
+  .h-screen,
+  .min-h-screen,
+  .image-container,
+  .full-screen-menu,
+  .scroll-container {
+    height: -webkit-fill-available;
+  }
 }

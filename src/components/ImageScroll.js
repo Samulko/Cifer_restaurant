@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Lenis from '@studio-freight/lenis';
 
 const ImageScroll = () => {
   const scrollContainerRef = useRef(null);
+  const [isTouch, setIsTouch] = useState(false);
   
   const sections = [
     {
@@ -21,10 +22,10 @@ const ImageScroll = () => {
       description: 'A Journey Through Flavors'
     },
     {
-      id: 'events',
+      id: 'menu',
       image: '/images/DSC_2620-HDR.webp',
-      title: 'Special Events',
-      description: 'Celebrate With Us'
+      title: 'Our Menu',
+      description: 'Culinary Excellence'
     },
     {
       id: 'contact',
@@ -42,6 +43,9 @@ const ImageScroll = () => {
   ];
 
   useEffect(() => {
+    // Detect touch device
+    setIsTouch('ontouchstart' in window || navigator.maxTouchPoints > 0);
+
     if (!scrollContainerRef.current) return;
 
     // Initialize Lenis with the scroll container
@@ -53,7 +57,7 @@ const ImageScroll = () => {
       direction: 'vertical',
       gestureDirection: 'vertical',
       smooth: true,
-      smoothTouch: false,
+      smoothTouch: false, // Disable smooth scrolling on touch devices
       touchMultiplier: 1.5,
       wheelMultiplier: 1.0,
       touchInertiaMultiplier: 12,
@@ -71,7 +75,17 @@ const ImageScroll = () => {
     }
 
     rafId = requestAnimationFrame(raf);
-    console.log('Lenis initialized');
+    console.log('Lenis initialized with scroll container');
+
+    // Handle resize for viewport height
+    const handleResize = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+      lenis.resize(); // Update Lenis on resize
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Initial call
 
     // Intersection Observer for fade-in animation
     const observer = new IntersectionObserver(
@@ -102,6 +116,7 @@ const ImageScroll = () => {
       lenis.destroy();
       window.lenis = null;
       observer.disconnect();
+      window.removeEventListener('resize', handleResize);
       console.log('Lenis destroyed');
     };
   }, []);
@@ -110,14 +125,16 @@ const ImageScroll = () => {
     <div className="fixed inset-0 bg-black">
       <div 
         ref={scrollContainerRef}
-        className="h-screen overflow-y-auto"
+        className="scroll-container"
+        data-lenis-prevent={isTouch}
       >
         {/* Main Sections */}
         {sections.map((section, index) => (
           <section 
             key={section.id}
             id={section.id}
-            className="relative h-screen w-full"
+            className="relative min-h-screen w-full"
+            data-section-id={section.id}
           >
             {index > 0 && (
               <div className="absolute top-0 left-0 w-full h-16 z-10 bg-gradient-to-b from-black to-transparent" />
@@ -162,7 +179,7 @@ const ImageScroll = () => {
         {additionalImages.map((src, index) => (
           <div 
             key={src} 
-            className="relative h-screen w-full"
+            className="relative min-h-screen w-full"
           >
             <div className="absolute top-0 left-0 w-full h-16 z-10 bg-gradient-to-b from-black to-transparent" />
             <div className="image-container relative w-full h-full flex items-center justify-center overflow-hidden opacity-0 transition-all duration-1000">
