@@ -140,7 +140,7 @@ const ImageScroll = ({ currentLanguage }) => {
     <div className="fixed inset-0 bg-black">
       <div 
         ref={scrollContainerRef}
-        className="scroll-container fixed inset-0 bg-black h-[calc(var(--vh,1vh)*100)] overflow-y-auto"
+        className="scroll-container fixed inset-0 bg-white h-[calc(var(--vh,1vh)*100)] overflow-y-auto"
         data-lenis-prevent={isTouch}
       >
         {/* Main Sections */}
@@ -148,21 +148,21 @@ const ImageScroll = ({ currentLanguage }) => {
           <section
             key={section.id}
             id={section.id}
-            className="relative min-h-screen w-full"
+            className="relative min-h-screen w-full px-8 md:px-16 py-12"
             data-section-id={section.id}
           >
             {index > 0 && (
-              <div className="absolute top-0 left-0 w-full h-16 z-10 bg-gradient-to-b from-black to-transparent" />
+              <div className="absolute top-0 left-8 md:left-16 right-8 md:right-16 h-16 z-10 bg-gradient-to-b from-white to-transparent" />
             )}
             
-            <div className="image-container relative w-full h-full flex items-center justify-center overflow-hidden opacity-0 transition-all duration-1000">
-              <div className="relative w-[120%] h-full transition-all duration-700 hover:brightness-110">
+            <div className="image-container relative w-full h-[80vh] flex items-center justify-center overflow-hidden opacity-0 transition-all duration-1000 rounded-lg">
+              <div className="relative w-full h-full transition-all duration-700 hover:brightness-110">
                 <Image
                   src={section.image}
                   alt={section.title}
                   fill
                   className="object-cover"
-                  sizes="120vw"
+                  sizes="(max-width: 768px) 84vw, 90vw"
                   priority={index === 0}
                   loading={index === 0 ? "eager" : "lazy"}
                   quality={90}
@@ -200,17 +200,17 @@ const ImageScroll = ({ currentLanguage }) => {
         {additionalImages.map((src, index) => (
           <div 
             key={src} 
-            className="relative min-h-screen w-full"
+            className="relative min-h-screen w-full px-8 md:px-16 py-12"
           >
-            <div className="absolute top-0 left-0 w-full h-16 z-10 bg-gradient-to-b from-black to-transparent" />
-            <div className="image-container relative w-full h-full flex items-center justify-center overflow-hidden opacity-0 transition-all duration-1000">
-              <div className="relative w-[120%] h-full transition-all duration-700 hover:brightness-110">
+            <div className="absolute top-0 left-8 md:left-16 right-8 md:right-16 h-16 z-10 bg-gradient-to-b from-white to-transparent" />
+            <div className="image-container relative w-full h-[80vh] flex items-center justify-center overflow-hidden opacity-0 transition-all duration-1000 rounded-lg">
+              <div className="relative w-full h-full transition-all duration-700 hover:brightness-110">
                 <Image
                   src={src}
                   alt={`Additional restaurant ambiance ${index + 1}`}
                   fill
                   className="object-cover"
-                  sizes="120vw"
+                  sizes="(max-width: 768px) 84vw, 90vw"
                   loading="lazy"
                   quality={90}
                 />
