@@ -140,7 +140,7 @@ const ImageScroll = ({ currentLanguage }) => {
     <div className="fixed inset-0 bg-black">
       <div 
         ref={scrollContainerRef}
-        className="scroll-container"
+        className="scroll-container fixed inset-0 bg-black h-[calc(var(--vh,1vh)*100)] overflow-y-auto"
         data-lenis-prevent={isTouch}
       >
         {/* Main Sections */}
