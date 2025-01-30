@@ -2,13 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+@import './tailwind/components.css';
+
 :root {
   --foreground-rgb: 255, 255, 255;
   --background-rgb: 0, 0, 0;
   --vh: 1vh;
 }
 
-html {
+html, body {
   height: 100%;
   overflow: hidden;
   -webkit-tap-highlight-color: transparent;
@@ -17,9 +19,6 @@ html {
 body {
   color: rgb(var(--foreground-rgb));
   background: rgb(var(--background-rgb));
-  font-family: 'Inter', sans-serif;
-  height: 100%;
-  overflow: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

@@ -1,0 +1,23 @@
+.navMenu {
+  composes: fixed top-12 left-8 z-[1000] mix-blend-difference cursor-pointer;
+  transition: opacity 0.3s ease;
+}
+
+.fullScreenMenu {
+  composes: fixed inset-0 w-screen h-screen bg-black/95 z-[999] flex items-center justify-center;
+  backdrop-filter: blur(5px);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.fullScreenMenu.active {
+  @apply opacity-100 pointer-events-auto;
+}
+
+.menuItem {
+  composes: bg-transparent border-none cursor-pointer px-4 py-2 w-full text-center;
+  transition: opacity 0.3s ease;
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+}

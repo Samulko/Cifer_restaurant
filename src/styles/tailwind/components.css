@@ -1,0 +1,14 @@
+@layer components {
+  .image-container {
+    @apply relative w-full h-[calc(var(--vh,1vh)*100)] overflow-hidden;
+  }
+  
+  .overlay-text {
+    @apply absolute z-10 mix-blend-difference text-white;
+    font-size: clamp(2rem, 5vw, 4rem);
+  }
+  
+  .scroll-container {
+    @apply fixed inset-0 bg-black;
+  }
+}
