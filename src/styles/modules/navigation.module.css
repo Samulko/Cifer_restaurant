@@ -1,23 +1,40 @@
 .navMenu {
-  composes: fixed top-12 left-8 z-[1000] mix-blend-difference cursor-pointer;
+  composes: fixed top-12 left-8 z-[1000] mix-blend-difference;
+  font-size: 1.25rem;
   transition: opacity 0.3s ease;
+  padding: 1rem;
+  cursor: pointer;
 }
 
 .fullScreenMenu {
-  composes: fixed inset-0 w-screen h-screen bg-black/95 z-[999] flex items-center justify-center;
+  composes: fixed inset-0 bg-black/95 z-[999];
   backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   opacity: 0;
   pointer-events: none;
   transition: all 0.3s ease;
 }
 
 .fullScreenMenu.active {
-  @apply opacity-100 pointer-events-auto;
+  opacity: 1;
+  pointer-events: auto;
 }
 
-.menuItem {
-  composes: bg-transparent border-none cursor-pointer px-4 py-2 w-full text-center;
-  transition: opacity 0.3s ease;
-  font-size: 2.25rem;
-  line-height: 2.5rem;
+.menuContent {
+  composes: flex flex-col items-center space-y-8;
+}
+
+@media (max-width: 768px) {
+  .navMenu {
+    top: 1.5rem;
+    left: 1.5rem;
+    font-size: 1rem;
+  }
+  
+  .fullScreenMenu button {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+  }
 }
