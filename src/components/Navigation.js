@@ -28,7 +28,7 @@ export default function Navigation({ currentLanguage, onLanguageChange }) {
         onClick={toggleMenu}
         aria-label="Toggle menu"
       >
-        <span className="text-white">MENU</span>
+        <span className="text-black">MENU</span>
       </button>
 
       <div className={`${styles.fullScreenMenu} ${isMenuOpen ? styles.active : ''}`}>

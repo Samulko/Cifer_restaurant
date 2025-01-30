@@ -137,10 +137,14 @@ const ImageScroll = ({ currentLanguage }) => {
   }, []);
 
   return (
-    <div className="fixed inset-0 bg-black">
+    <div className="fixed inset-0 bg-[#F5F1EA]">
       <div 
         ref={scrollContainerRef}
-        className="scroll-container fixed inset-0 bg-white h-[calc(var(--vh,1vh)*100)] overflow-y-auto"
+        className="scroll-container fixed inset-0 bg-[#F5F1EA] h-[calc(var(--vh,1vh)*100)] overflow-y-auto before:content-[''] before:fixed before:inset-0 before:w-full before:h-full before:bg-noise before:opacity-[0.08] before:pointer-events-none before:z-50"
+        style={{
+          '--tw-bg-opacity': '1',
+          backgroundColor: '#F5F1EA',
+        }}
         data-lenis-prevent={isTouch}
       >
         {/* Main Sections */}
@@ -151,10 +155,22 @@ const ImageScroll = ({ currentLanguage }) => {
             className="relative min-h-screen w-full px-8 md:px-16 py-12"
             data-section-id={section.id}
           >
-            {index > 0 && (
-              <div className="absolute top-0 left-8 md:left-16 right-8 md:right-16 h-16 z-10 bg-gradient-to-b from-white to-transparent" />
-            )}
-            
+            {/* Section Content */}
+            <div className="w-full max-w-4xl mx-auto mb-8">
+              <h2 className="text-4xl md:text-6xl font-bold mb-8 text-[#1a1a1a]">
+                {section.title}
+              </h2>
+              {section.id === 'reservation' ? (
+                <div className="bg-white/90 backdrop-blur-sm rounded-xl p-6 shadow-xl">
+                  <ReservationForm currentLanguage={currentLanguage} />
+                </div>
+              ) : (
+                <p className="text-xl md:text-2xl text-[#1a1a1a]">
+                  {section.description}
+                </p>
+              )}
+            </div>
+
             <div className="image-container relative w-full h-[80vh] flex items-center justify-center overflow-hidden opacity-0 transition-all duration-1000 rounded-lg">
               <div className="relative w-full h-full transition-all duration-700 hover:brightness-110">
                 <Image
@@ -168,30 +184,6 @@ const ImageScroll = ({ currentLanguage }) => {
                   quality={90}
                 />
               </div>
-
-              {/* Section Content Overlay */}
-              <div
-                className="absolute inset-0 flex items-center justify-center text-center z-10"
-                style={{
-                  mixBlendMode: 'difference',
-                  color: 'white'
-                }}
-              >
-                <div className="w-full max-w-4xl px-4">
-                  <h2 className="text-4xl md:text-6xl font-bold mb-8 [text-shadow:_2px_2px_10px_rgb(0_0_0_/_90%)]">
-                    {section.title}
-                  </h2>
-                  {section.id === 'reservation' ? (
-                    <div className="bg-white/90 backdrop-blur-sm rounded-xl p-6 shadow-xl">
-                      <ReservationForm currentLanguage={currentLanguage} />
-                    </div>
-                  ) : (
-                    <p className="text-xl md:text-2xl [text-shadow:_2px_2px_8px_rgb(0_0_0_/_90%)]">
-                      {section.description}
-                    </p>
-                  )}
-                </div>
-              </div>
             </div>
           </section>
         ))}
@@ -202,7 +194,6 @@ const ImageScroll = ({ currentLanguage }) => {
             key={src} 
             className="relative min-h-screen w-full px-8 md:px-16 py-12"
           >
-            <div className="absolute top-0 left-8 md:left-16 right-8 md:right-16 h-16 z-10 bg-gradient-to-b from-white to-transparent" />
             <div className="image-container relative w-full h-[80vh] flex items-center justify-center overflow-hidden opacity-0 transition-all duration-1000 rounded-lg">
               <div className="relative w-full h-full transition-all duration-700 hover:brightness-110">
                 <Image
