@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import Link from 'next/link';
 import { translations as en } from '../../public/locales/en';
 import { translations as sk } from '../../public/locales/sk';
-import styles from '@/styles/modules/navigation.module.css';
+import styles from '../styles/modules/navigation.module.css';
 
 export default function Navigation({ currentLanguage, onLanguageChange }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
