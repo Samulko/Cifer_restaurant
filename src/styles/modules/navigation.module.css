@@ -1,5 +1,6 @@
 .navMenu {
-  composes: fixed top-12 left-8 z-[1000] mix-blend-difference;
+  @apply fixed top-12 left-8 z-[1000];
+  mix-blend-mode: difference;
   font-size: 1.25rem;
   transition: opacity 0.3s ease;
   padding: 1rem;
@@ -7,7 +8,8 @@
 }
 
 .fullScreenMenu {
-  composes: fixed inset-0 bg-black/95 z-[999];
+  @apply fixed inset-0 z-[999];
+  background-color: rgba(0, 0, 0, 0.95);
   backdrop-filter: blur(5px);
   display: flex;
   align-items: center;
@@ -23,7 +25,7 @@
 }
 
 .menuContent {
-  composes: flex flex-col items-center space-y-8;
+  @apply flex flex-col items-center space-y-8;
 }
 
 @media (max-width: 768px) {
