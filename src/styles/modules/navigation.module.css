@@ -1,5 +1,5 @@
 .navMenu {
-  @apply fixed top-12 left-8 z-[1000];
+  @apply fixed top-12 left-8 z-[1000] font-playwrite;
   mix-blend-mode: difference;
   font-size: 1.25rem;
   transition: opacity 0.3s ease;
@@ -26,6 +26,12 @@
 
 .menuContent {
   @apply flex flex-col items-center space-y-8;
+}
+
+.menuContent button {
+  @apply font-playwrite;
+  font-size: 2.25rem;
+  line-height: 2.5rem;
 }
 
 @media (max-width: 768px) {

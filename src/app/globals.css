@@ -1,5 +1,14 @@
 @tailwind base;
 
+@layer base {
+  @font-face {
+    font-family: 'Playwrite Slovensko Guides';
+    font-style: normal;
+    font-weight: 400;
+    src: url('/fonts/playwrite-slovensko-guides.woff2') format('woff2');
+  }
+}
+
 @import '../styles/tailwind/components.css';
 
 @tailwind components;
@@ -18,6 +27,7 @@ html, body {
 }
 
 body {
+  font-family: 'Playwrite Slovensko Guides', sans-serif;
   color: rgb(var(--foreground-rgb));
   background: rgb(var(--background-rgb));
   -webkit-font-smoothing: antialiased;
