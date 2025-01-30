@@ -1,143 +1,62 @@
-'use client';
+import { useState, useCallback } from 'react';
+import Link from 'next/link';
+import { translations as en } from '../../public/locales/en';
+import { translations as sk } from '../../public/locales/sk';
 
-import { useState, useEffect, useCallback } from 'react';
-
-export default function Navigation() {
+export default function Navigation({ currentLanguage, onLanguageChange }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  const [isTouch, setIsTouch] = useState(false);
 
-  const handleNavClick = useCallback((e, sectionId) => {
-    e.preventDefault();
-    
-    const lenis = window.lenis;
-    if (!lenis) {
-      console.log('Lenis not found');
-      return;
+  const toggleMenu = useCallback(() => {
+    setIsMenuOpen(!isMenuOpen);
+  }, [isMenuOpen]);
+
+  const handleReservationClick = () => {
+    if (window.lenis) {
+      window.lenis.scrollTo('#reservation', {
+        duration: 1.5
+      });
     }
-
-    const target = document.getElementById(sectionId);
-    if (!target) {
-      console.log(`Target section ${sectionId} not found`);
-      return;
-    }
-
-    // Close menu first
     setIsMenuOpen(false);
-
-    // Remove body scroll lock
-    document.body.style.overflow = '';
-
-    // Small delay to allow menu animation to complete
-    setTimeout(() => {
-      console.log(`Scrolling to section: ${sectionId}`);
-      if (isTouch) {
-        // Use native scroll on touch devices
-        target.scrollIntoView({ behavior: 'smooth' });
-      } else {
-        // Use Lenis on desktop
-        lenis.scrollTo(target, {
-          duration: 1.8,
-          easing: (t) => Math.min(1, 1.001 - Math.pow(5, -10 * t))
-        });
-      }
-    }, 300);
-  }, [isTouch]);
-
-  useEffect(() => {
-    // Detect touch device
-    setIsTouch('ontouchstart' in window || navigator.maxTouchPoints > 0);
-    setMounted(true);
-
-    // Prevent body scroll when menu is open
-    const updateBodyScroll = () => {
-      document.body.style.overflow = isMenuOpen ? 'hidden' : '';
-      if (isMenuOpen) {
-        // Prevent iOS Safari bounce effect when menu is open
-        document.documentElement.style.position = 'fixed';
-        document.documentElement.style.width = '100%';
-      } else {
-        document.documentElement.style.position = '';
-        document.documentElement.style.width = '';
-      }
-    };
-    updateBodyScroll();
-
-    // Handle escape key to close menu
-    const handleEscape = (e) => {
-      if (e.key === 'Escape' && isMenuOpen) {
-        setIsMenuOpen(false);
-      }
-    };
-
-    // Handle touch events outside menu
-    const handleTouchOutside = (e) => {
-      if (isMenuOpen && e.target.closest('nav') === null) {
-        setIsMenuOpen(false);
-      }
-    };
-
-    window.addEventListener('keydown', handleEscape);
-    if (isTouch) {
-      document.addEventListener('touchstart', handleTouchOutside);
-    }
-
-    return () => {
-      document.body.style.overflow = '';
-      document.documentElement.style.position = '';
-      document.documentElement.style.width = '';
-      window.removeEventListener('keydown', handleEscape);
-      if (isTouch) {
-        document.removeEventListener('touchstart', handleTouchOutside);
-      }
-    };
-  }, [isMenuOpen, isTouch]);
-
-  if (!mounted) {
-    return null;
-  }
+  };
 
   return (
     <>
-      <button 
-        className="nav-menu text-white"
-        onClick={() => setIsMenuOpen(!isMenuOpen)}
-        aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
-        aria-expanded={isMenuOpen}
+      {/* Menu Button */}
+      <button
+        className="nav-menu"
+        onClick={toggleMenu}
+        aria-label="Toggle menu"
       >
-        {isMenuOpen ? 'Close' : 'Menu'}
+        <span className="text-white">MENU</span>
       </button>
 
-      <div 
-        className={`full-screen-menu ${isMenuOpen ? 'active' : ''}`}
-        onClick={() => setIsMenuOpen(false)} // Close menu when clicking backdrop
-        role="dialog"
-        aria-modal="true"
-        aria-label="Navigation menu"
-      >
-        <nav 
-          className="text-center"
-          onClick={(e) => e.stopPropagation()} // Prevent menu from closing when clicking nav
-        >
-          <ul className="space-y-8" role="menu">
-            {[
-              { id: 'home', label: 'Home' },
-              { id: 'about', label: 'About' },
-              { id: 'menu', label: 'Menu' },
-              { id: 'contact', label: 'Contact' }
-            ].map(({ id, label }) => (
-              <li key={id} role="none">
-                <button
-                  onClick={(e) => handleNavClick(e, id)}
-                  className="nav-item text-4xl hover:opacity-70 transition-opacity text-white"
-                  role="menuitem"
-                >
-                  {label}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </nav>
+      {/* Full Screen Menu */}
+      <div className={`full-screen-menu ${isMenuOpen ? 'active' : ''}`}>
+        <div className="flex flex-col items-center space-y-8">
+          <Link href="#home" onClick={toggleMenu}>
+            <button>
+              {currentLanguage === 'en' ? en.navigation.home : sk.navigation.home}
+            </button>
+          </Link>
+          <Link href="#about" onClick={toggleMenu}>
+            <button>
+              {currentLanguage === 'en' ? en.navigation.about : sk.navigation.about}
+            </button>
+          </Link>
+          <Link href="#menu" onClick={toggleMenu}>
+            <button>
+              {currentLanguage === 'en' ? en.navigation.menu : sk.navigation.menu}
+            </button>
+          </Link>
+          <Link href="#contact" onClick={toggleMenu}>
+            <button>
+              {currentLanguage === 'en' ? en.navigation.contact : sk.navigation.contact}
+            </button>
+          </Link>
+          <button onClick={handleReservationClick}>
+            Reservation
+          </button>
+        </div>
       </div>
     </>
   );

@@ -1,45 +1,60 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import Image from 'next/image';
 import Lenis from '@studio-freight/lenis';
+import ReservationButton from './ReservationButton';
+import ReservationForm from './ReservationForm';
+import { translations as enTranslations } from '../../public/locales/en';
+import { translations as skTranslations } from '../../public/locales/sk';
 
-const ImageScroll = () => {
+const ImageScroll = ({ currentLanguage }) => {
   const scrollContainerRef = useRef(null);
   const [isTouch, setIsTouch] = useState(false);
   
-  const sections = [
+  // Use useMemo to memoize the translations and sections
+  const translations = useMemo(() => 
+    currentLanguage === 'en' ? enTranslations : skTranslations,
+    [currentLanguage]
+  );
+  
+  const sections = useMemo(() => [
     {
       id: 'home',
       image: '/images/DSC_3061-HDR.webp',
-      title: 'Welcome to Haji',
-      description: 'Fine Dining Experience'
+      title: translations.sections.home.title,
+      description: translations.sections.home.description
     },
     {
       id: 'about',
       image: '/images/DSC_2299-HDR.webp',
-      title: 'Our Story',
-      description: 'A Journey Through Flavors'
+      title: translations.sections.about.title,
+      description: translations.sections.about.description
     },
     {
       id: 'menu',
       image: '/images/DSC_2620-HDR.webp',
-      title: 'Our Menu',
-      description: 'Culinary Excellence'
+      title: translations.sections.menu.title,
+      description: translations.sections.menu.description
     },
     {
       id: 'contact',
       image: '/images/DSC_2689-HDR.webp',
-      title: 'Get in Touch',
-      description: 'Make a Reservation'
+      title: translations.sections.contact.title,
+      description: translations.sections.contact.description
+    },
+    {
+      id: 'reservation',
+      image: '/images/DSC_3016-HDR.webp',
+      title: translations.sections.reservation.title,
+      description: translations.sections.reservation.description
     }
-  ];
+  ], [translations]);
 
   const additionalImages = [
     '/images/DSC_2776-HDR.webp',
     '/images/DSC_2848-HDR.webp',
-    '/images/DSC_2905-HDR.webp',
-    '/images/DSC_3016-HDR.webp'
+    '/images/DSC_2905-HDR.webp'
   ];
 
   useEffect(() => {
@@ -130,7 +145,7 @@ const ImageScroll = () => {
       >
         {/* Main Sections */}
         {sections.map((section, index) => (
-          <section 
+          <section
             key={section.id}
             id={section.id}
             className="relative min-h-screen w-full"
@@ -155,20 +170,26 @@ const ImageScroll = () => {
               </div>
 
               {/* Section Content Overlay */}
-              <div 
+              <div
                 className="absolute inset-0 flex items-center justify-center text-center z-10"
-                style={{ 
+                style={{
                   mixBlendMode: 'difference',
                   color: 'white'
                 }}
               >
-                <div>
-                  <h2 className="text-4xl md:text-6xl font-bold mb-4 [text-shadow:_2px_2px_10px_rgb(0_0_0_/_90%)]">
+                <div className="w-full max-w-4xl px-4">
+                  <h2 className="text-4xl md:text-6xl font-bold mb-8 [text-shadow:_2px_2px_10px_rgb(0_0_0_/_90%)]">
                     {section.title}
                   </h2>
-                  <p className="text-xl md:text-2xl [text-shadow:_2px_2px_8px_rgb(0_0_0_/_90%)]">
-                    {section.description}
-                  </p>
+                  {section.id === 'reservation' ? (
+                    <div className="bg-white/90 backdrop-blur-sm rounded-xl p-6 shadow-xl">
+                      <ReservationForm currentLanguage={currentLanguage} />
+                    </div>
+                  ) : (
+                    <p className="text-xl md:text-2xl [text-shadow:_2px_2px_8px_rgb(0_0_0_/_90%)]">
+                      {section.description}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>

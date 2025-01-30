@@ -19,6 +19,7 @@ const ImageScroll = dynamic(() => import('../components/ImageScroll'), {
 export default function Home() {
   const [mounted, setMounted] = useState(false);
   const [isTouch, setIsTouch] = useState(false);
+  const [currentLanguage, setCurrentLanguage] = useState('en');
   const mainRef = useRef(null);
 
   useEffect(() => {
@@ -97,6 +98,10 @@ export default function Home() {
     };
   }, [isTouch]);
 
+  const toggleLanguage = () => {
+    setCurrentLanguage(currentLanguage === 'en' ? 'sk' : 'en');
+  };
+
   // Prevent flash of unstyled content
   if (!mounted) {
     return (
@@ -110,17 +115,17 @@ export default function Home() {
     <div ref={mainRef} className="relative min-h-screen bg-black">
       {/* Main scrollable content */}
       <div className="relative w-full h-screen">
-        <ImageScroll />
+        <ImageScroll currentLanguage={currentLanguage} />
       </div>
 
       {/* Fixed UI elements */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="pointer-events-auto">
-          <Navigation />
+          <Navigation currentLanguage={currentLanguage} onLanguageChange={toggleLanguage} />
         </div>
         <div className="pointer-events-auto">
           <ScrollToTop />
-          <ReservationButton />
+          <ReservationButton currentLanguage={currentLanguage} onLanguageChange={toggleLanguage} />
         </div>
       </div>
     </div>
