@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "export": "next build && next export",
+    "preview": "npx serve out"
   },
   "dependencies": {
     "@studio-freight/lenis": "^1.0.42",

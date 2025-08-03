@@ -58,14 +58,14 @@ const ImageScroll = ({ currentLanguage }) => {
     }
   ], [translations, isMobile]);
 
-  const additionalImages = [
+  const additionalImages = useMemo(() => [
     getImagePath(6),
     getImagePath(7),
     getImagePath(8),
     getImagePath(9),
     getImagePath(10),
     getImagePath(11)
-  ];
+  ], [isMobile]);
 
   useEffect(() => {
     // Detect touch device and screen size
@@ -80,29 +80,35 @@ const ImageScroll = ({ currentLanguage }) => {
 
     if (!scrollContainerRef.current) return;
 
-    // Initialize Lenis with the scroll container
+    // Initialize Lenis with optimized settings for performance
     const lenis = new Lenis({
       wrapper: scrollContainerRef.current,
       content: scrollContainerRef.current,
-      duration: 1.8,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(5, -10 * t)),
+      duration: 1.2, // Reduced for smoother performance
+      easing: (t) => 1 - Math.pow(1 - t, 3), // Simpler cubic-out easing
       direction: 'vertical',
       gestureDirection: 'vertical',
       smooth: true,
       smoothTouch: false, // Disable smooth scrolling on touch devices
-      touchMultiplier: 1.5,
-      wheelMultiplier: 1.0,
-      touchInertiaMultiplier: 12,
+      touchMultiplier: 1.2, // Reduced for better control
+      wheelMultiplier: 0.8, // Reduced for smoother scrolling
+      touchInertiaMultiplier: 8, // Reduced for less aggressive scroll
       normalizeWheel: true,
-      infinite: false
+      infinite: false,
+      syncTouch: true // Better touch handling
     });
 
     // Store lenis instance globally
     window.lenis = lenis;
 
     let rafId = null;
+    let lastTime = 0;
     function raf(time) {
-      lenis.raf(time);
+      // Throttle to 60fps for better performance
+      if (time - lastTime >= 16.67) {
+        lenis.raf(time);
+        lastTime = time;
+      }
       rafId = requestAnimationFrame(raf);
     }
 
@@ -119,27 +125,34 @@ const ImageScroll = ({ currentLanguage }) => {
     window.addEventListener('resize', handleResize);
     handleResize(); // Initial call
 
-    // Intersection Observer for fade-in animation
+    // Optimized Intersection Observer with debouncing
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('animate-fade-in');
-            entry.target.classList.remove('opacity-0');
-            observer.unobserve(entry.target);
-          }
+        // Use requestAnimationFrame to batch DOM updates
+        requestAnimationFrame(() => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && entry.intersectionRatio > 0.1) {
+              entry.target.classList.add('animate-fade-in');
+              entry.target.classList.remove('opacity-0');
+              observer.unobserve(entry.target);
+            }
+          });
         });
       },
       {
-        threshold: 0.2,
-        root: scrollContainerRef.current
+        threshold: [0.1, 0.2],
+        root: scrollContainerRef.current,
+        rootMargin: '50px' // Preload images slightly before they come into view
       }
     );
 
-    const imageContainers = document.querySelectorAll('.image-container');
-    imageContainers.forEach((img) => {
-      observer.observe(img);
-    });
+    // Use setTimeout to avoid blocking initial render
+    setTimeout(() => {
+      const imageContainers = document.querySelectorAll('.image-container');
+      imageContainers.forEach((img) => {
+        observer.observe(img);
+      });
+    }, 100);
 
     return () => {
       if (rafId) {
@@ -196,10 +209,12 @@ const ImageScroll = ({ currentLanguage }) => {
                   alt={section.title}
                   fill
                   className="object-cover"
-                  sizes="(max-width: 768px) 84vw, 90vw"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 80vw"
                   priority={index === 0}
                   loading={index === 0 ? "eager" : "lazy"}
-                  quality={90}
+                  quality={isMobile ? 75 : 85}
+                  placeholder="blur"
+                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWEREiMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                 />
               </div>
             </div>

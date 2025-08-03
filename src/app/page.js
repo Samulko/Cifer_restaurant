@@ -18,14 +18,10 @@ const ImageScroll = dynamic(() => import('../components/ImageScroll'), {
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
-  const [isTouch, setIsTouch] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState('en');
   const mainRef = useRef(null);
 
   useEffect(() => {
-    // Detect touch device
-    setIsTouch('ontouchstart' in window || navigator.maxTouchPoints > 0);
-
     // Ensure proper initialization order
     const initializePage = async () => {
       // Clean up any existing Lenis instance
@@ -70,14 +66,13 @@ export default function Home() {
 
     // Prevent pull-to-refresh on mobile
     const preventPullToRefresh = (e) => {
-      if (e.touches[0].pageY < 10) {
+      if (e.touches && e.touches[0] && e.touches[0].pageY < 10) {
         e.preventDefault();
       }
     };
 
-    if (isTouch) {
-      document.addEventListener('touchstart', preventPullToRefresh, { passive: false });
-    }
+    // Always set up touch listeners to avoid hydration mismatch
+    document.addEventListener('touchstart', preventPullToRefresh, { passive: false });
 
     return () => {
       // Clean up Lenis instance
@@ -89,14 +84,12 @@ export default function Home() {
       // Clean up event listeners
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('orientationchange', handleOrientationChange);
-      if (isTouch) {
-        document.removeEventListener('touchstart', preventPullToRefresh);
-      }
+      document.removeEventListener('touchstart', preventPullToRefresh);
 
       // Clean up viewport height
       document.documentElement.style.removeProperty('--vh');
     };
-  }, [isTouch]);
+  }, []);
 
   const toggleLanguage = () => {
     setCurrentLanguage(currentLanguage === 'en' ? 'sk' : 'en');
