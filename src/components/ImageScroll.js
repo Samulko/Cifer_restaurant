@@ -207,14 +207,17 @@ const ImageScroll = ({ currentLanguage }) => {
               )}
             </div>
 
-            <div className="image-container relative w-full h-[60vh] sm:h-[70vh] md:h-[80vh] flex items-center justify-center overflow-hidden opacity-0 transition-all duration-1000 rounded-xl shadow-lg">
+            <div className="image-container relative w-full sm:w-[95%] md:w-full mx-auto aspect-[4/3] sm:aspect-[3/2] md:aspect-[16/9] flex items-center justify-center overflow-hidden opacity-0 transition-all duration-1000 rounded-xl shadow-lg">
               <div className="relative w-full h-full transition-all duration-700 hover:brightness-110">
                 <Image
                   src={section.image}
                   alt={section.title}
                   fill
                   className="object-cover"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 80vw"
+                  style={{
+                    objectPosition: isMobile ? 'center 30%' : 'center center'
+                  }}
+                  sizes="(max-width: 768px) 95vw, (max-width: 1200px) 90vw, 80vw"
                   priority={index === 0}
                   loading={index === 0 ? "eager" : "lazy"}
                   quality={isMobile ? 75 : 85}
@@ -232,14 +235,17 @@ const ImageScroll = ({ currentLanguage }) => {
             key={src} 
             className="relative min-h-screen w-full px-4 sm:px-8 md:px-16 py-16 sm:py-20 md:py-24"
           >
-            <div className="image-container relative w-full h-[60vh] sm:h-[70vh] md:h-[80vh] flex items-center justify-center overflow-hidden opacity-0 transition-all duration-1000 rounded-xl shadow-lg">
+            <div className="image-container relative w-full sm:w-[95%] md:w-full mx-auto aspect-[4/3] sm:aspect-[3/2] md:aspect-[16/9] flex items-center justify-center overflow-hidden opacity-0 transition-all duration-1000 rounded-xl shadow-lg">
               <div className="relative w-full h-full transition-all duration-700 hover:brightness-110">
                 <Image
                   src={src}
                   alt={`Additional restaurant ambiance ${index + 1}`}
                   fill
                   className="object-cover"
-                  sizes="(max-width: 768px) 84vw, 90vw"
+                  style={{
+                    objectPosition: isMobile ? 'center 30%' : 'center center'
+                  }}
+                  sizes="(max-width: 768px) 95vw, 90vw"
                   loading="lazy"
                   quality={90}
                 />
