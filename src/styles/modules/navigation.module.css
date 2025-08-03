@@ -37,12 +37,27 @@
 @media (max-width: 768px) {
   .navMenu {
     top: 1.5rem;
-    left: 1.5rem;
-    font-size: 1rem;
+    left: 1rem;
+    font-size: 0.875rem;
+    padding: 0.75rem;
   }
   
   .fullScreenMenu button {
     font-size: 1.875rem;
     line-height: 2.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .navMenu {
+    top: 1rem;
+    left: 0.75rem;
+    font-size: 0.75rem;
+    padding: 0.5rem;
+  }
+  
+  .menuContent button {
+    font-size: 1.5rem;
+    line-height: 2rem;
   }
 }

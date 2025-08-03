@@ -184,26 +184,30 @@ const ImageScroll = ({ currentLanguage }) => {
           <section
             key={section.id}
             id={section.id}
-            className="relative min-h-screen w-full px-8 md:px-16 py-12"
+            className={`relative min-h-screen w-full px-4 sm:px-8 md:px-16 ${
+              index === 0 
+                ? 'pt-20 sm:pt-24 md:pt-28 pb-16 md:pb-20' 
+                : 'py-16 sm:py-20 md:py-24'
+            }`}
             data-section-id={section.id}
           >
             {/* Section Content */}
-            <div className="w-full max-w-4xl mx-auto mb-8">
-              <h2 className="text-4xl md:text-6xl font-bold mb-8 text-[#1a1a1a]">
+            <div className="w-full max-w-4xl mx-auto mb-12 sm:mb-16 md:mb-20">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold mb-6 sm:mb-8 md:mb-12 text-[#1a1a1a] leading-tight tracking-tight">
                 {section.title}
               </h2>
               {section.id === 'reservation' ? (
-                <div className="bg-white/90 backdrop-blur-sm rounded-xl p-6 shadow-xl">
+                <div className="bg-white/90 backdrop-blur-sm rounded-xl p-6 md:p-8 shadow-xl">
                   <ReservationForm currentLanguage={currentLanguage} />
                 </div>
               ) : (
-                <p className="text-xl md:text-2xl text-[#1a1a1a]">
+                <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-[#1a1a1a] leading-relaxed max-w-3xl tracking-wide opacity-90">
                   {section.description}
                 </p>
               )}
             </div>
 
-            <div className="image-container relative w-full h-[80vh] flex items-center justify-center overflow-hidden opacity-0 transition-all duration-1000 rounded-lg">
+            <div className="image-container relative w-full h-[60vh] sm:h-[70vh] md:h-[80vh] flex items-center justify-center overflow-hidden opacity-0 transition-all duration-1000 rounded-xl shadow-lg">
               <div className="relative w-full h-full transition-all duration-700 hover:brightness-110">
                 <Image
                   src={section.image}
@@ -226,9 +230,9 @@ const ImageScroll = ({ currentLanguage }) => {
         {additionalImages.map((src, index) => (
           <div 
             key={src} 
-            className="relative min-h-screen w-full px-8 md:px-16 py-12"
+            className="relative min-h-screen w-full px-4 sm:px-8 md:px-16 py-16 sm:py-20 md:py-24"
           >
-            <div className="image-container relative w-full h-[80vh] flex items-center justify-center overflow-hidden opacity-0 transition-all duration-1000 rounded-lg">
+            <div className="image-container relative w-full h-[60vh] sm:h-[70vh] md:h-[80vh] flex items-center justify-center overflow-hidden opacity-0 transition-all duration-1000 rounded-xl shadow-lg">
               <div className="relative w-full h-full transition-all duration-700 hover:brightness-110">
                 <Image
                   src={src}
