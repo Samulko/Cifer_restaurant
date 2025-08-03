@@ -16,7 +16,8 @@ const ImageScroll = ({ currentLanguage }) => {
   // Helper function to get responsive image path
   const getImagePath = (imageNumber) => {
     const folder = isMobile ? 'mobile' : 'desktop';
-    return `/images/${folder}/${imageNumber.toString().padStart(3, '0')}.webp`;
+    const basePath = process.env.NODE_ENV === 'production' ? '/Cifer_restaurant' : '';
+    return `${basePath}/images/${folder}/${imageNumber.toString().padStart(3, '0')}.webp`;
   };
   
   // Use useMemo to memoize the translations and sections
