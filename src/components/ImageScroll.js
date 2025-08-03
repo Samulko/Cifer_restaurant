@@ -11,6 +11,13 @@ import { translations as skTranslations } from '../../public/locales/sk';
 const ImageScroll = ({ currentLanguage }) => {
   const scrollContainerRef = useRef(null);
   const [isTouch, setIsTouch] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Helper function to get responsive image path
+  const getImagePath = (imageNumber) => {
+    const folder = isMobile ? 'mobile' : 'desktop';
+    return `/images/${folder}/${imageNumber.toString().padStart(3, '0')}.webp`;
+  };
   
   // Use useMemo to memoize the translations and sections
   const translations = useMemo(() => 
@@ -21,45 +28,55 @@ const ImageScroll = ({ currentLanguage }) => {
   const sections = useMemo(() => [
     {
       id: 'home',
-      image: '/images/DSC_3061-HDR.webp',
+      image: getImagePath(1),
       title: translations.sections.home.title,
       description: translations.sections.home.description
     },
     {
       id: 'about',
-      image: '/images/DSC_2299-HDR.webp',
+      image: getImagePath(2),
       title: translations.sections.about.title,
       description: translations.sections.about.description
     },
     {
       id: 'menu',
-      image: '/images/DSC_2620-HDR.webp',
+      image: getImagePath(3),
       title: translations.sections.menu.title,
       description: translations.sections.menu.description
     },
     {
       id: 'contact',
-      image: '/images/DSC_2689-HDR.webp',
+      image: getImagePath(4),
       title: translations.sections.contact.title,
       description: translations.sections.contact.description
     },
     {
       id: 'reservation',
-      image: '/images/DSC_3016-HDR.webp',
+      image: getImagePath(5),
       title: translations.sections.reservation.title,
       description: translations.sections.reservation.description
     }
-  ], [translations]);
+  ], [translations, isMobile]);
 
   const additionalImages = [
-    '/images/DSC_2776-HDR.webp',
-    '/images/DSC_2848-HDR.webp',
-    '/images/DSC_2905-HDR.webp'
+    getImagePath(6),
+    getImagePath(7),
+    getImagePath(8),
+    getImagePath(9),
+    getImagePath(10),
+    getImagePath(11)
   ];
 
   useEffect(() => {
-    // Detect touch device
+    // Detect touch device and screen size
     setIsTouch('ontouchstart' in window || navigator.maxTouchPoints > 0);
+    setIsMobile(window.innerWidth < 768);
+
+    // Handle resize to update mobile detection  
+    const handleMobileResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener('resize', handleMobileResize);
 
     if (!scrollContainerRef.current) return;
 
@@ -132,6 +149,7 @@ const ImageScroll = ({ currentLanguage }) => {
       window.lenis = null;
       observer.disconnect();
       window.removeEventListener('resize', handleResize);
+      window.removeEventListener('resize', handleMobileResize);
       console.log('Lenis destroyed');
     };
   }, []);

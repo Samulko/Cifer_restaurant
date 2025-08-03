@@ -9,13 +9,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const [isTouch, setIsTouch] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+    
     // Detect touch device
     setIsTouch('ontouchstart' in window || navigator.maxTouchPoints > 0);
 
-    // Add lenis-smooth class to html element
-    document.documentElement.classList.add('lenis-smooth');
+    // Lenis class will be added via className prop to avoid hydration mismatch
 
     // Prevent iOS Safari bounce effect
     const preventBounce = (e: TouchEvent) => {
@@ -60,7 +62,7 @@ export default function RootLayout({
         window.lenis.destroy();
         window.lenis = null;
       }
-      document.documentElement.classList.remove('lenis-smooth');
+      // Lenis class cleanup handled via className prop
 
       // Clean up styles
       document.documentElement.style.removeProperty('height');
@@ -79,7 +81,7 @@ export default function RootLayout({
   }, [isTouch]);
 
   return (
-    <html lang="en" className="antialiased">
+    <html lang="en" className={mounted ? "antialiased lenis-smooth" : "antialiased"}>
       <head>
         <title>Cifer Restaurant</title>
         <meta name="description" content="Fine dining experience" />
